@@ -4,15 +4,16 @@ class Particle {
         this.index = index;
 
         this.radius = Math.random() * 20;
-        this.mass = 3 * Math.floor(this.radius ** 2); //approximation of the area.
+        this.mass = Math.PI * this.radius ** 2;
 
         this.x = this.radius + Math.random() * (this.effect.width - this.radius * 2);
         this.y = this.radius + Math.random() * (this.effect.height - this.radius * 2);
         this.vx = (Math.random() * 10 - 5);
         this.vy = (Math.random() * 10 - 5);
+        this.hue = Math.random() * 360;
     }
     draw(context){
-        context.fillStyle = 'hsl(' + this.x / 2 + ', 100%, 50%)';
+        context.fillStyle = 'hsl(' + this.hue + ', 100%, 50%)';
         context.beginPath();
         context.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
         context.fill();
@@ -31,11 +32,12 @@ class Effect {
     constructor(canvas){
         this.canvas = canvas;
         this.context = canvas.getContext('2d');
+        this.context.fillStyle = 'white';
 
         this.width = this.canvas.width;
         this.height = this.canvas.height;
         this.particles = [];
-        this.numberOfParticles = 5;
+        this.numberOfParticles = 100;
         this.createParticles();
 
         window.addEventListener('resize', () => {
@@ -59,12 +61,14 @@ class Effect {
     }
     handleParticles(){
         this.collision();
+        this.connectParticles(120);
         this.particles.forEach(particle => {
             particle.draw(this.context);
             particle.update();
         });
     }
     connectParticles(maxdistance){
+        this.context.strokeStyle = 'white';
         for (let a = 0; a < this.particles.length; a++){
             for (let b = a; b < this.particles.length; b++){
                 const dx = this.particles[a].x - this.particles[b].x;
@@ -120,6 +124,8 @@ class Effect {
                             p2.x += (overlap * nx) * (p1.mass / totalMass);
                             p2.y += (overlap * ny) * (p1.mass / totalMass);
                         }
+
+                        [p1.hue, p2.hue] = [p2.hue, p1.hue];
                     }
                 }
             }
