@@ -18,8 +18,8 @@ class Particle {
         context.fill();
     }
     update(){
-        this.x = Math.max(0, Math.min(this.effect.width - this.radius, this.x));
-        this.y = Math.max(0, Math.min(this.effect.height - this.radius, this.y));
+        this.x = Math.max(this.radius, Math.min(this.effect.width - this.radius, this.x));
+        this.y = Math.max(this.radius, Math.min(this.effect.height - this.radius, this.y));
         this.x += this.vx;
         if (this.x > this.effect.width - this.radius|| this.x < this.radius) this.vx *= -1;
         this.y += this.vy;
@@ -35,7 +35,7 @@ class Effect {
         this.width = this.canvas.width;
         this.height = this.canvas.height;
         this.particles = [];
-        this.numberOfParticles = 100;
+        this.numberOfParticles = 5;
         this.createParticles();
 
         window.addEventListener('resize', () => {
