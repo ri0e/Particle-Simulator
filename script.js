@@ -1,27 +1,23 @@
-const canvas = document.getElementById('canvas1');
-const ctx = canvas.getContext('2d');
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
-ctx.fillStyle = 'white';
-ctx.strokeStyle = 'white';
-
 class Particle {
-    constructor(effect){
+    constructor(effect, index){
         this.effect = effect;
+        this.index = index;
+
         this.radius = Math.random() * 20;
         this.x = this.radius + Math.random() * (this.effect.width - this.radius * 2);
         this.y = this.radius + Math.random() * (this.effect.height - this.radius * 2);
-        this.vx = (Math.random() * 10 - 5)/5;
-        this.vy = (Math.random() * 10 - 5)/5;
+        this.vx = (Math.random() * 10 - 5);
+        this.vy = (Math.random() * 10 - 5);
     }
     draw(context){
         context.fillStyle = 'hsl(' + this.x / 2 + ', 100%, 50%)';
         context.beginPath();
         context.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-        //context.fill();
-        context.stroke();
+        context.fill();
     }
     update(){
+        this.x = Math.max(0, Math.min(this.effect.width - this.radius, this.x));
+        this.y = Math.max(0, Math.min(this.effect.height - this.radius, this.y));
         this.x += this.vx;
         if (this.x > this.effect.width - this.radius|| this.x < this.radius) this.vx *= -1;
         this.y += this.vy;
@@ -32,26 +28,40 @@ class Particle {
 class Effect {
     constructor(canvas){
         this.canvas = canvas;
+        this.context = canvas.getContext('2d');
+
         this.width = this.canvas.width;
         this.height = this.canvas.height;
         this.particles = [];
-        this.numberOfParticles = 300;
+        this.numberOfParticles = 100;
         this.createParticles();
+
+        window.addEventListener('resize', () => {
+            effect.resize(window.innerWidth, window.innerHeight);
+        });
+    }
+    resize(width, height){
+        this.canvas.width = width;
+        this.canvas.height = height;
+
+        this.width = width;
+        this.height = height;
+
+        this.context.fillStyle = 'white';
+        this.context.strokeStyle = 'white';
     }
     createParticles(){
         for (let i = 0; i < this.numberOfParticles; i++){
-            this.particles.push(new Particle(this));
+            this.particles.push(new Particle(this, i));
         }
     }
-    handleParticles(context){
-        this.particles.forEach(function(particle){
-            particle.draw(context);
+    handleParticles(){
+        this.particles.forEach((particle) => {
+            particle.draw(this.context);
             particle.update();
         });
-        this.connectParticles(context);
     }
-    connectParticles(context){
-        const maxdistance = 100;
+    connectParticles(maxdistance){
         for (let a = 0; a < this.particles.length; a++){
             for (let b = a; b < this.particles.length; b++){
                 const dx = this.particles[a].x - this.particles[b].x;
@@ -59,21 +69,25 @@ class Effect {
                 const distance = Math.hypot(dx, dy);
 
                 if (distance < maxdistance){
-                    context.beginPath();
-                    context.moveTo(this.particles[a].x, this.particles[a].y);
-                    context.lineTo(this.particles[b].x, this.particles[b].y);
-                    context.stroke();
+                    this.context.beginPath();
+                    this.context.moveTo(this.particles[a].x, this.particles[a].y);
+                    this.context.lineTo(this.particles[b].x, this.particles[b].y);
+                    this.context.stroke();
                 }
             }
         }
     }
-}
-const effect = new Effect(canvas);
-
-function animate() {
-    ctx.clearRect(0,0, canvas.width, canvas.height);
-    effect.handleParticles(ctx);
-    requestAnimationFrame(animate);
+    animate = () => {
+        this.context.clearRect(0,0, this.canvas.width, this.canvas.height);
+        this.handleParticles(this.context);
+        requestAnimationFrame(this.animate);
+    }
 }
 
-animate();
+const canvas = document.getElementById('canvas1');
+const ctx = canvas.getContext('2d');
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+const effect = new Effect(canvas, ctx);
+effect.animate();
