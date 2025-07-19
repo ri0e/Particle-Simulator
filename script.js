@@ -2,10 +2,11 @@ class Particle {
     constructor(effect, index){
         this.effect = effect;
         this.index = index;
-        this.max = 17;
-        this.min = 5;
 
-        this.radius = Math.floor(Math.random() * (this.max - this.min) + this.min);
+        this.maxRadius = 20;
+        this.minRadius = 1;
+
+        this.radius = Math.floor(Math.random() * (this.maxRadius - this.minRadius) + this.minRadius);
         this.mass = Math.PI * this.radius ** 2;
 
         this.x = this.radius + Math.random() * (this.effect.width - this.radius * 2);
@@ -16,8 +17,7 @@ class Particle {
 
         this.pushX = 0;
         this.pushY = 0;
-        this.friction = 0.90;
-    } 
+    }
     draw(context){
         context.fillStyle = 'hsl(' + this.x / 2 + ', 70%, 50%)';
         context.beginPath();
@@ -37,9 +37,9 @@ class Particle {
                 this.pushY += Math.sin(angle) * force;
             }
         }
-
-        this.x += (this.pushX *= this.friction) + this.vx;
-        this.y += (this.pushY *= this.friction) + this.vy;
+        
+        this.x += (this.pushX *= this.effect.friction) + (this.vx * this.effect.speed);
+        this.y += (this.pushY *= this.effect.friction) + (this.vy * this.effect.speed);
         
         if (this.x < this.radius){
             this.x = this.radius;
@@ -75,6 +75,8 @@ class Effect {
         this.connect = true;
 
         this.maxdistance = 150;
+        this.speed = 1;
+        this.friction = 0.90;
 
         this.mouse = {
             x: 0,
@@ -105,6 +107,16 @@ class Effect {
 
         window.addEventListener('resize', () => {
             effect.resize(window.innerWidth, window.innerHeight);
+        });
+    }
+    updateRadius(radius, bool){
+        this.particles.forEach(particle => {
+            if (bool){
+                particle.maxRadius = radius;
+                particle.radius = Math.floor(Math.random() * (radius - particle.minRadius) + particle.minRadius);
+            } else {
+                particle.radius = radius;
+            }
         });
     }
     resize(width, height){
@@ -233,20 +245,19 @@ canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
 const effect = new Effect(canvas);
+let appeared = false;
 effect.animate();
 
 const numberOfParticles = document.getElementById('nop');
 numberOfParticles.value = effect.numberOfParticles;
-numberOfParticles.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') {
-        let proceed = true;
-        if (numberOfParticles.value > 100){
-            proceed = confirm('You seem to have chosen a very large number for your particles.\n Do you wish to proceed?');
-        }
-        if (proceed){
-            effect.updateParticles(numberOfParticles.value);
-        }
+numberOfParticles.addEventListener('input', (e) => {
+    let proceed;
+    if (numberOfParticles.value > 100 && !appeared){
+        proceed = confirm('You seem to have chosen a very large number for your particles.\n Do you wish to proceed?');
+        if (proceed) appeared = true;
+        else return;
     }
+    effect.updateParticles(numberOfParticles.value);
 });
 
 const collisionCheck = document.getElementById('collision');
@@ -281,4 +292,11 @@ mouseRadius.value = effect.mouse.radius;
 mouseRadius.parentElement.hidden = !mouseRadius.value;
 mouseRadius.addEventListener('input', () => {
     effect.mouse.radius = mouseRadius.value;
+});
+
+const radiusCheck = document.getElementById('randomRadius');
+const radius = document.getElementById('radius');
+radius.value = effect.particles[0].maxRadius;
+radius.addEventListener('input', () => {
+    effect.updateRadius(radius.value, radiusCheck.checked);
 });
