@@ -9,4 +9,17 @@
     position: absolute;
     top: 0;
     left: 0;
+    z-index: 0;
+}
+
+.control-panel {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    color: white;
+    z-index: 2;
+}
+
+input {
+    z-index: 2;
 }

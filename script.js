@@ -3,7 +3,7 @@ class Particle {
         this.effect = effect;
         this.index = index;
 
-        this.radius = Math.floor(Math.random() * 0 + 0);
+        this.radius = Math.floor(Math.random() * 12 + 5);
         this.mass = Math.PI * this.radius ** 2;
 
         this.x = this.radius + Math.random() * (this.effect.width - this.radius * 2);
@@ -61,12 +61,13 @@ class Effect {
         this.canvas = canvas;
         this.context = canvas.getContext('2d');
         this.context.fillStyle = 'white';
+        this.context.strokeStyle = 'white';
 
         this.width = this.canvas.width;
         this.height = this.canvas.height;
-        this.particles = [];
-        this.numberOfParticles = 100;
-        this.createParticles();
+
+        this.defaultNOP = 50;
+        this.createParticles(this.defaultNOP);
 
         this.mouse = {
             x: 0,
@@ -78,20 +79,17 @@ class Effect {
         window.addEventListener('resize', () => {
             effect.resize(window.innerWidth, window.innerHeight);
         });
-
         window.addEventListener('mousemove', e => {
             if (this.mouse.pressed){
                 this.mouse.x = e.x;
                 this.mouse.y = e.y;
             }
         });
-
         window.addEventListener('mousedown', e => {
             this.mouse.pressed = true;
             this.mouse.x = e.x;
             this.mouse.y = e.y;
         });
-
         window.addEventListener('mouseup', () => {
             this.mouse.pressed = false;
         });
@@ -106,9 +104,35 @@ class Effect {
         this.context.fillStyle = 'white';
         this.context.strokeStyle = 'white';
     }
-    createParticles(){
-        for (let i = 0; i < this.numberOfParticles; i++){
+    createParticles(count){
+        this.particles = [];
+        for (let i = 0; i < count; i++){
             this.particles.push(new Particle(this, i));
+        }
+        this.numberOfParticles = this.particles.length;
+    }
+    addParticles(count){
+        for (let i = 0; i < count; i++){
+            this.particles.push(new Particle(this, this.particles.length + i));
+        }
+        this.numberOfParticles = this.particles.length;
+    }
+    removeParticles(count){
+        for (let i = 0; i < count; i++) {
+            if (this.particles.length){
+                this.particles.pop();
+            }
+        }
+        this.numberOfParticles = this.particles.length;
+    }
+    updateParticles(newCount){
+        const difference = newCount - this.numberOfParticles;
+        if (difference > 0){
+            this.addParticles(difference);
+        } else if (difference < 0){
+            this.removeParticles(-difference);
+        } else {
+            //Do nothing
         }
     }
     handleParticles(){
@@ -193,3 +217,14 @@ canvas.height = window.innerHeight;
 
 const effect = new Effect(canvas);
 effect.animate();
+
+const numberOfParticles = document.getElementById('nop');
+numberOfParticles.value = effect.numberOfParticles;
+
+numberOfParticles.addEventListener('keyup', (e) => {
+    if (e.key === 'Enter') {
+        effect.updateParticles(numberOfParticles.value);
+        console.log(numberOfParticles.value);
+        console.log('Enter pressed');
+    }
+});
