@@ -12,7 +12,20 @@
     <div class="control-panel">
         <div class="control">
             <label for="nop">Number of Particles:</label>
-            <input id="nop" type="number" min="1" step="1">
+            <input class="number" id="nop" type="number" min="1" step="1">
+        </div>
+        <div class="control">
+            <label for="nop">:</label>
+            <input class="number" id="nop" type="number" min="1" step="1">
+        </div>
+
+        <div class="control">
+            <label for="mouse">Mouse Interaction:</label>
+            <input id="mouse" type="checkbox">
+        </div>
+        <div class="control">
+            <label for="mouseRadius">Mouse Radius:</label>
+            <input class="number" id="mouseRadius" type="number">
         </div>
         <div class="control">
             <label for="collision">Collision:</label>
@@ -21,6 +34,10 @@
         <div class="control">
             <label for="connect">Draw Lines:</label>
             <input id="connect" type="checkbox">
+        </div>
+        <div class="control">
+            <label for="connectDistance">Line length:</label>
+            <input class="number" id="connectDistance" type="number">
         </div>
     </div>
     <script src="script.js"></script>
