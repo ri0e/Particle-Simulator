@@ -66,8 +66,13 @@ class Effect {
         this.width = this.canvas.width;
         this.height = this.canvas.height;
 
-        this.defaultNOP = 50;
-        this.createParticles(this.defaultNOP);
+        this.createParticles(50);
+
+        //booleans
+        this.collide = true;
+        this.connect = true;
+
+        this.maxdistance = 150;
 
         this.mouse = {
             x: 0,
@@ -136,14 +141,18 @@ class Effect {
         }
     }
     handleParticles(){
-        this.collision();
-        this.connectParticles(100);
+        if (this.collide){
+            this.collision();
+        }
+        if (this.connect) {
+            this.connectParticles();
+        }
         this.particles.forEach(particle => {
             particle.draw(this.context);
             particle.update();
         });
     }
-    connectParticles(maxdistance){
+    connectParticles(){
         this.context.strokeStyle = 'white';
         for (let a = 0; a < this.particles.length; a++){
             for (let b = a; b < this.particles.length; b++){
@@ -151,9 +160,9 @@ class Effect {
                 const dy = this.particles[a].y - this.particles[b].y;
                 const distance = Math.hypot(dx, dy);
 
-                if (distance < maxdistance){
+                if (distance < this.maxdistance){
                     this.context.save();
-                    const opacity = 1 - (distance/maxdistance);
+                    const opacity = 1 - (distance/this.maxdistance);
                     this.context.globalAlpha = opacity;
                     this.context.beginPath();
                     this.context.moveTo(this.particles[a].x, this.particles[a].y);
@@ -221,8 +230,28 @@ effect.animate();
 const numberOfParticles = document.getElementById('nop');
 numberOfParticles.value = effect.numberOfParticles;
 
-numberOfParticles.addEventListener('keyup', (e) => {
+const collisionCheck = document.getElementById('collision');
+effect.collide = collisionCheck.checked;
+
+const connectCheck = document.getElementById('connect');
+effect.connect = connectCheck.checked;
+
+numberOfParticles.addEventListener('keydown', (e) => {
     if (e.key === 'Enter') {
-        effect.updateParticles(numberOfParticles.value);
+        let proceed = true;
+        if (numberOfParticles.value > 100){
+            proceed = confirm('You seem to have chosen a very large number for your particles.\n Do you wish to proceed?');
+        }
+        if (proceed){
+            effect.updateParticles(numberOfParticles.value);
+        }
     }
+});
+
+collisionCheck.addEventListener('input', () => {
+    effect.collide = collisionCheck.checked;
+});
+
+connectCheck.addEventListener('input', () => {
+    effect.connect = connectCheck.checked;
 });
