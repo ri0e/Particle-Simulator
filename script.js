@@ -3,7 +3,7 @@ class Particle {
         this.effect = effect;
         this.index = index;
 
-        this.radius = Math.random() * 12 + 1;
+        this.radius = Math.floor(Math.random() * 0 + 0);
         this.mass = Math.PI * this.radius ** 2;
 
         this.x = this.radius + Math.random() * (this.effect.width - this.radius * 2);
@@ -14,10 +14,10 @@ class Particle {
 
         this.pushX = 0;
         this.pushY = 0;
-        this.friction = 0.95;
-    }
+        this.friction = 0.85;
+    } 
     draw(context){
-        context.fillStyle = 'hsl(' + 250 + ', 50%, 50%)';
+        context.fillStyle = 'hsl(' + this.x / 2 + ', 70%, 50%)';
         context.beginPath();
         context.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
         context.fill();
@@ -65,7 +65,7 @@ class Effect {
         this.width = this.canvas.width;
         this.height = this.canvas.height;
         this.particles = [];
-        this.numberOfParticles = 500;
+        this.numberOfParticles = 100;
         this.createParticles();
 
         this.mouse = {
@@ -113,7 +113,7 @@ class Effect {
     }
     handleParticles(){
         this.collision();
-        // this.connectParticles(30);
+        this.connectParticles(100);
         this.particles.forEach(particle => {
             particle.draw(this.context);
             particle.update();
@@ -128,10 +128,14 @@ class Effect {
                 const distance = Math.hypot(dx, dy);
 
                 if (distance < maxdistance){
+                    this.context.save();
+                    const opacity = 1 - (distance/maxdistance);
+                    this.context.globalAlpha = opacity;
                     this.context.beginPath();
                     this.context.moveTo(this.particles[a].x, this.particles[a].y);
                     this.context.lineTo(this.particles[b].x, this.particles[b].y);
                     this.context.stroke();
+                    this.context.restore();
                 }
             }
         }
@@ -149,25 +153,20 @@ class Effect {
                 const distance = Math.hypot(dx, dy);
 
                 if (distance < contact){
-                    // Line of impact (normal vector)
                     const nx = dx / distance;
                     const ny = dy / distance;
-
-                    // Relative velocity
-                    const rvx = p1.vx - p2.vx;
-                    const rvy = p1.vy - p2.vy;
-
-                    // Velocity along normal (dot product)
+                    const rvx = p1.vx + p1.pushX - p2.vx - p2.pushX;
+                    const rvy = p1.vy + p1.pushY - p2.vy - p2.pushY;
                     const vn = rvx * nx + rvy * ny;
 
                     if (vn < 0) {
-                        const impulse = (2 * vn) / (p1.mass + p2.mass); // Change in momentum
+                        const impulse = (2 * vn) / (p1.mass + p2.mass);
 
                         p1.vx -= impulse * p2.mass * nx;
                         p1.vy -= impulse * p2.mass * ny;
                         p2.vx += impulse * p1.mass * nx;
                         p2.vy += impulse * p1.mass * ny;
-
+                        
                         const overlap = contact - distance;
                         if (overlap > 0){
                             const totalMass = p1.mass + p2.mass;
