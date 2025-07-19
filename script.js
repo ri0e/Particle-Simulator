@@ -224,7 +224,5 @@ numberOfParticles.value = effect.numberOfParticles;
 numberOfParticles.addEventListener('keyup', (e) => {
     if (e.key === 'Enter') {
         effect.updateParticles(numberOfParticles.value);
-        console.log(numberOfParticles.value);
-        console.log('Enter pressed');
     }
 });
