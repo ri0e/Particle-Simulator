@@ -88,14 +88,14 @@ class Effect {
         
         window.addEventListener('mousemove', e => {
             if (this.mouse.active && this.mouse.pressed){
-                this.mouse.x = e.x;
-                this.mouse.y = e.y;
+            this.mouse.x = e.x;
+            this.mouse.y = e.y;
             }
         });
         window.addEventListener('touchmove', e => {
-            if (this.mouse.active && this.mouse.pressed){
-                this.mouse.x = e.x;
-                this.mouse.y = e.y;
+            if (this.mouse.active && this.mouse.pressed && e.touches.length > 0) {
+            this.mouse.x = e.touches[0].clientX;
+            this.mouse.y = e.touches[0].clientY;
             }
         });
         window.addEventListener('mousedown', e => {
@@ -105,21 +105,21 @@ class Effect {
                 this.mouse.y = e.y;
             }
         });
-        window.addEventListener('touchdown', e => {
-            if (this.mouse.active){
-                this.mouse.pressed = true;
-                this.mouse.x = e.x;
-                this.mouse.y = e.y;
+        window.addEventListener('touchstart', e => {
+            if (this.mouse.active && e.touches.length > 0) {
+            this.mouse.pressed = true;
+            this.mouse.x = e.touches[0].clientX;
+            this.mouse.y = e.touches[0].clientY;
             }
         });
         window.addEventListener('mouseup', () => {
             if (this.mouse.active){
-                this.mouse.pressed = false;
+            this.mouse.pressed = false;
             }
         });
-        window.addEventListener('touchup', () => {
+        window.addEventListener('touchend', () => {
             if (this.mouse.active){
-                this.mouse.pressed = false;
+            this.mouse.pressed = false;
             }
         });
         window.addEventListener('resize', () => {
