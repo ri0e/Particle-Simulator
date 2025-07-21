@@ -92,7 +92,20 @@ class Effect {
                 this.mouse.y = e.y;
             }
         });
+        window.addEventListener('touchmove', e => {
+            if (this.mouse.active && this.mouse.pressed){
+                this.mouse.x = e.x;
+                this.mouse.y = e.y;
+            }
+        });
         window.addEventListener('mousedown', e => {
+            if (this.mouse.active){
+                this.mouse.pressed = true;
+                this.mouse.x = e.x;
+                this.mouse.y = e.y;
+            }
+        });
+        window.addEventListener('touchdown', e => {
             if (this.mouse.active){
                 this.mouse.pressed = true;
                 this.mouse.x = e.x;
@@ -104,7 +117,11 @@ class Effect {
                 this.mouse.pressed = false;
             }
         });
-
+        window.addEventListener('touchup', () => {
+            if (this.mouse.active){
+                this.mouse.pressed = false;
+            }
+        });
         window.addEventListener('resize', () => {
             effect.resize(window.innerWidth, window.innerHeight);
         });
@@ -161,12 +178,7 @@ class Effect {
         }
     }
     handleParticles(){
-        if (this.collide){
-            this.collision();
-        }
-        if (this.connect) {
-            this.connectParticles();
-        }
+        if (this.collide || this.connect) this.collision();
         this.particles.forEach(particle => {
             particle.draw(this.context);
             particle.update();
@@ -196,7 +208,6 @@ class Effect {
     collision(){
         for (let a = 0; a < this.particles.length; a++){
             for (let b = a; b < this.particles.length; b++){
-                
                 const p1 = this.particles[a];
                 const p2 = this.particles[b];
 
@@ -205,29 +216,44 @@ class Effect {
                 const dy = p1.y - p2.y;
                 const distance = Math.hypot(dx, dy);
 
-                if (distance < contact){
-                    const nx = dx / distance;
-                    const ny = dy / distance;
-                    const rvx = p1.vx + p1.pushX - p2.vx - p2.pushX;
-                    const rvy = p1.vy + p1.pushY - p2.vy - p2.pushY;
-                    const vn = rvx * nx + rvy * ny;
-
-                    if (vn < 0) {
-                        const impulse = (2 * vn) / (p1.mass + p2.mass);
-
-                        p1.vx -= impulse * p2.mass * nx;
-                        p1.vy -= impulse * p2.mass * ny;
-                        p2.vx += impulse * p1.mass * nx;
-                        p2.vy += impulse * p1.mass * ny;
-                        
-                        const overlap = contact - distance;
-                        if (overlap > 0){
-                            const totalMass = p1.mass + p2.mass;
-                            p1.x -= (overlap * nx) * (p2.mass / totalMass);
-                            p1.y -= (overlap * ny) * (p2.mass / totalMass);
-                            p2.x += (overlap * nx) * (p1.mass / totalMass);
-                            p2.y += (overlap * ny) * (p1.mass / totalMass);
+                if (this.collide){
+                    if (distance < contact){
+                        const nx = dx / distance;
+                        const ny = dy / distance;
+                        const rvx = p1.vx + p1.pushX - p2.vx - p2.pushX;
+                        const rvy = p1.vy + p1.pushY - p2.vy - p2.pushY;
+                        const vn = rvx * nx + rvy * ny;
+    
+                        if (vn < 0) {
+                            const impulse = (2 * vn) / (p1.mass + p2.mass);
+    
+                            p1.vx -= impulse * p2.mass * nx;
+                            p1.vy -= impulse * p2.mass * ny;
+                            p2.vx += impulse * p1.mass * nx;
+                            p2.vy += impulse * p1.mass * ny;
+                            
+                            const overlap = contact - distance;
+                            if (overlap > 0){
+                                const totalMass = p1.mass + p2.mass;
+                                p1.x -= (overlap * nx) * (p2.mass / totalMass);
+                                p1.y -= (overlap * ny) * (p2.mass / totalMass);
+                                p2.x += (overlap * nx) * (p1.mass / totalMass);
+                                p2.y += (overlap * ny) * (p1.mass / totalMass);
+                            }
                         }
+                    }
+                }
+
+                if (this.connect){
+                    if (distance < this.maxdistance){
+                        this.context.save();
+                        const opacity = 1 - (distance/this.maxdistance);
+                        this.context.globalAlpha = opacity;
+                        this.context.beginPath();
+                        this.context.moveTo(p1.x, p1.y);
+                        this.context.lineTo(p2.x, p2.y);
+                        this.context.stroke();
+                        this.context.restore();
                     }
                 }
             }
