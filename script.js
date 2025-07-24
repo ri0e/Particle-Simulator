@@ -4,9 +4,9 @@ class Particle {
         this.index = index;
 
         this.maxRadius = 20;
-        this.minRadius = 1;
+        this.minRadius = 5;
 
-        this.radius = Math.floor(Math.random() * (this.maxRadius - this.minRadius) + this.minRadius);
+        this.radius = Math.floor(Math.random() * (this.maxRadius) + this.minRadius);
         this.mass = Math.PI * this.radius ** 2;
 
         this.x = this.radius + Math.random() * (this.effect.width - this.radius * 2);
@@ -71,11 +71,14 @@ class Effect {
         this.createParticles(50);
 
         //booleans
+        this.constRadius = false;
         this.collide = true;
         this.connect = true;
 
         this.maxdistance = 150;
+
         this.speed = 1;
+        this.radius = 0;
         this.friction = 0.90;
 
         this.mouse = {
@@ -123,18 +126,24 @@ class Effect {
             this.mouse.pressed = false;
             }
         });
+
         window.addEventListener('resize', () => {
             effect.resize(window.innerWidth, window.innerHeight);
         });
     }
-    updateRadius(radius, bool){
+    updateRadius(bool){
         this.particles.forEach(particle => {
-            if (bool){
-                particle.maxRadius = radius;
-                particle.radius = Math.floor(Math.random() * (radius - particle.minRadius) + particle.minRadius);
+            if (!bool){
+                particle.maxRadius = this.radius;
+                particle.radius = this.radius;
             } else {
-                particle.radius = radius;
+                particle.maxRadius = this.radius;
+                particle.radius = Math.floor(Math.random() * (this.radius - particle.minRadius) + particle.minRadius);
             }
+
+            particle.mass = Math.PI * particle.radius ** 2;
+            particle.x = Math.max(particle.radius, Math.min(particle.x, this.width - particle.radius));
+            particle.y = Math.max(particle.radius, Math.min(particle.y, this.height - particle.radius));
         });
     }
     resize(width, height){
@@ -156,7 +165,9 @@ class Effect {
     }
     addParticles(count){
         for (let i = 0; i < count; i++){
-            this.particles.push(new Particle(this, this.particles.length + i));
+            const particle = new Particle(this, this.particles.length + i);
+            particle.radius
+            this.particles.push();
         }
         this.numberOfParticles = this.particles.length;
     }
@@ -184,27 +195,6 @@ class Effect {
             particle.draw(this.context);
             particle.update();
         });
-    }
-    connectParticles(){
-        this.context.strokeStyle = 'white';
-        for (let a = 0; a < this.particles.length; a++){
-            for (let b = a; b < this.particles.length; b++){
-                const dx = this.particles[a].x - this.particles[b].x;
-                const dy = this.particles[a].y - this.particles[b].y;
-                const distance = Math.hypot(dx, dy);
-
-                if (distance < this.maxdistance){
-                    this.context.save();
-                    const opacity = 1 - (distance/this.maxdistance);
-                    this.context.globalAlpha = opacity;
-                    this.context.beginPath();
-                    this.context.moveTo(this.particles[a].x, this.particles[a].y);
-                    this.context.lineTo(this.particles[b].x, this.particles[b].y);
-                    this.context.stroke();
-                    this.context.restore();
-                }
-            }
-        }
     }
     collision(){
         for (let a = 0; a < this.particles.length; a++){
@@ -321,9 +311,24 @@ mouseRadius.addEventListener('input', () => {
     effect.mouse.radius = mouseRadius.value;
 });
 
-const radiusCheck = document.getElementById('randomRadius');
-const radius = document.getElementById('radius');
-radius.value = effect.particles[0].maxRadius;
-radius.addEventListener('input', () => {
-    effect.updateRadius(radius.value, radiusCheck.checked);
+// const radiusCheck = document.getElementById('randomRadius');
+// const radius = document.getElementById('radius');
+// radius.value = effect.particles[0].maxRadius;
+// radius.addEventListener('input', () => {
+//     const value = Number(radius.value);
+//     if (value > 0){
+//         effect.constRadius = !radiusCheck.checked;
+//         effect.radius = value;
+//         effect.updateRadius(radiusCheck.checked);
+//     }
+// });
+const hide = document.getElementById('hide');
+const collapse = document.getElementById('col');
+collapse.addEventListener('click', () => {
+    if (collapse.innerText === '* * *' && !hide.hidden){
+        hide.hidden = true;
+    }
+    else {
+        hide.hidden = false;
+    }
 });
