@@ -311,24 +311,26 @@ mouseRadius.addEventListener('input', () => {
     effect.mouse.radius = mouseRadius.value;
 });
 
-// const radiusCheck = document.getElementById('randomRadius');
-// const radius = document.getElementById('radius');
-// radius.value = effect.particles[0].maxRadius;
-// radius.addEventListener('input', () => {
-//     const value = Number(radius.value);
-//     if (value > 0){
-//         effect.constRadius = !radiusCheck.checked;
-//         effect.radius = value;
-//         effect.updateRadius(radiusCheck.checked);
-//     }
-// });
+const radiusCheck = document.getElementById('randomRadius');
+const radius = document.getElementById('radius');
+radius.value = effect.particles[0].maxRadius;
+radius.addEventListener('input', () => {
+    const value = Number(radius.value);
+    if (value > 0){
+        effect.constRadius = !radiusCheck.checked;
+        effect.radius = value;
+        effect.updateRadius(radiusCheck.checked);
+    }
+});
 const hide = document.getElementById('hide');
 const collapse = document.getElementById('col');
 collapse.addEventListener('click', () => {
-    if (collapse.innerText === '* * *' && !hide.hidden){
+    if (collapse.innerText === '*     *     *' && !hide.hidden){
+        collapse.innerText = '***';
         hide.hidden = true;
     }
     else {
+        collapse.innerText = '*     *     *';
         hide.hidden = false;
     }
 });

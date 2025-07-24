@@ -36,6 +36,7 @@ input.number{
 }
 
 h2 {
+    white-space: pre;
     text-align: center;
     margin: 0;
     padding: 0;

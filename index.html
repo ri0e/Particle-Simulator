@@ -10,7 +10,7 @@
     <canvas id="canvas1"></canvas>
     
     <div id="control-panel">
-        <h2 id="col">* * *</h2>
+        <h2 id="col">*     *     *</h2>
         <div id="hide">
             <div class="control">
                 <label for="nop">Number of Particles:</label>
@@ -34,8 +34,8 @@
             </div>
             <div class="control">
                 <label for="connectDistance">Line length:</label>
-                <input class="number" id="connectDistance" type="number">
-            <!-- </div>
+                <input class="number" id="connectDistance" type="number" min="1" step="1">
+            </div>
             <div class="control">
                 <label for="randomRadius">Random Radius:</label>
                 <input id="randomRadius" type="checkbox">
@@ -43,7 +43,7 @@
             <div class="control">
                 <label for="radius">Radius:</label>
                 <input class="number" id="radius" type="number" min="1" step="1">
-            </div> -->
+            </div>
         </div>
     </div>
     <script src="script.js"></script>
