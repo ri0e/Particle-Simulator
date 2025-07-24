@@ -7,6 +7,7 @@ Particles interact with each other and respond to user input, supporting feature
 
 - **Collision detection and response**
 - **Mouse interaction**
+- **Connected particles**
 - **Adjustable parameters**
 - **Responsive design**
 - More in the works.
@@ -27,5 +28,3 @@ You can alternatively head to https://glassybridge.github.io/Particle-Simulator 
 
 - Modern web browser.
 - No external dependencies (since it is built using vanila JS).
-
-## License
