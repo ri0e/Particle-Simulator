@@ -38,8 +38,8 @@ class Particle {
             }
         }
         
-        this.x += (this.pushX *= this.effect.friction) + (this.vx * this.effect.speed);
-        this.y += (this.pushY *= this.effect.friction) + (this.vy * this.effect.speed);
+        this.x += ((this.pushX *= this.effect.friction) + (this.vx * this.effect.speed));
+        this.y += ((this.pushY *= this.effect.friction) + (this.vy * this.effect.speed));
         
         if (this.x < this.radius){
             this.x = this.radius;
@@ -151,7 +151,6 @@ class Effect {
     addParticles(count){
         for (let i = 0; i < count; i++){
             const particle = new Particle(this, this.particles.length + i);
-            console.log(this.constRadius);
             if (this.constRadius){
                 particle.radius = this.radius;
             } else {
@@ -269,6 +268,7 @@ canvas.height = window.innerHeight;
 
 const effect = new Effect(canvas);
 let appeared = false;
+let appeared2 = false;
 effect.animate();
 
 const numberOfParticles = document.getElementById('nop');
@@ -281,6 +281,18 @@ numberOfParticles.addEventListener('input' , () => {
         else return;
     }
     effect.updateParticles(numberOfParticles.value);
+});
+
+const simulationSpeed = document.getElementById('speed');
+simulationSpeed.value = effect.speed;
+simulationSpeed.addEventListener('input' , () => {
+    let proceed2;
+    if (simulationSpeed.value > 100 && !appeared2){
+        proceed2 = confirm('Are you sure you want your particle going so fast? (you might not be able to see them)');
+        if (proceed2) appeared2 = true;
+        else return;
+    }
+    effect.speed = simulationSpeed.value;
 });
 
 const collisionCheck = document.getElementById('collision');
