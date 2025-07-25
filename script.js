@@ -17,9 +17,10 @@ class Particle {
 
         this.pushX = 0;
         this.pushY = 0;
+        this.hue = Math.random() * 360;
     }
     draw(context){
-        context.fillStyle = 'hsl(' + this.x / 2 + ', 70%, 50%)';
+        context.fillStyle = 'hsl(' + this.hue + ', 70%, 50%)';
         context.beginPath();
         context.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
         context.fill();
@@ -241,6 +242,8 @@ class Effect {
                                 p2.y += (overlap * ny) * (p1.mass / totalMass);
                             }
                         }
+                        
+                        [p1.hue, p2.hue] = [p2.hue, p1.hue];
                     }
                 }
 
@@ -356,11 +359,9 @@ const controlPanel = document.getElementById('control-panel');
 controlPanel.addEventListener('mouseenter' ,() => {
     mouseWasChecked = effect.mouse.active;
     effect.mouse.active = false;
-    console.log('inside');
 });
 controlPanel.addEventListener('mouseleave' , () => {
     effect.mouse.active = mouseWasChecked;
-    console.log('outside');
 });
 
 const hide = document.getElementById('hide');
@@ -376,14 +377,17 @@ else {
     collapse.innerHTML = collapseSVG;
     collapsed = false;
 }
-
-function colExp(){
+collapse.addEventListener('click', () => {
     if (!collapsed && !hide.hidden){
         collapse.innerHTML = expandSVG;
         hide.hidden = true;
+        collapse.style.opacity = 0.3;
+        effect.mouse.active = mouseWasChecked;
     }
     else {
         collapse.innerHTML = collapseSVG;
         hide.hidden = false;
+        collapse.style.opacity = 1;
+        effect.mouse.active = mouseWasChecked;
     }
-}
+});
