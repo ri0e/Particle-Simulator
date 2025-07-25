@@ -38,22 +38,26 @@ class Particle {
             }
         }
         
-        this.x += ((this.pushX *= this.effect.friction) + (this.vx * this.effect.speed));
-        this.y += ((this.pushY *= this.effect.friction) + (this.vy * this.effect.speed));
+        this.x += (this.pushX *= this.effect.friction) + (this.vx * this.effect.speed);
+        this.y += (this.pushY *= this.effect.friction) + (this.vy * this.effect.speed);
         
         if (this.x < this.radius){
             this.x = this.radius;
-            this.vx *= -1;
+            if (this.vx < 0) this.vx *= -1;
+            if (this.pushX < 0) this.pushX *= -1;
         } else if (this.x > this.effect.width - this.radius) {
             this.x = this.effect.width - this.radius;
-            this.vx *= -1;
+            if (this.vx > 0) this.vx *= -1;
+            if (this.pushX > 0) this.pushX *= -1;
         }
         if (this.y < this.radius){
             this.y = this.radius;
-            this.vy *= -1;
+            if (this.vy < 0) this.vy *= -1;
+            if (this.pushY < 0) this.pushY *= -1;
         } else if (this.y > this.effect.height - this.radius) {
             this.y = this.effect.height - this.radius;
-            this.vy *= -1;
+            if (this.vy > 0) this.vy *= -1;
+            if (this.pushY > 0) this.pushY *= -1;
         }
     }
 }
@@ -321,7 +325,7 @@ let mouseWasChecked = mouseInteractionCheck.checked;
 mouseInteractionCheck.addEventListener('input', () => {
     effect.mouse.active = mouseInteractionCheck.checked;
     mouseRadius.parentElement.hidden = !effect.mouse.active;
-    mouseWasChecked = mouseInteractionCheck;
+    mouseWasChecked = mouseInteractionCheck.checked;
 });
 
 const mouseRadius = document.getElementById('mouseRadius');
@@ -344,19 +348,20 @@ radius.addEventListener('input', () => {
     if (value > 0){
         effect.constRadius = !randomRadiusCheck.checked;
         effect.radius = value;
-        effect.updateRadius(!randomRadiusCheck.checked);
+        effect.updateRadius(randomRadiusCheck.checked);
     }
 });
 
-const hide = document.getElementById('hide');
-hide.addEventListener('mouseenter' ,() => {
+const controlPanel = document.getElementById('control-panel');
+controlPanel.addEventListener('mouseenter' ,() => {
     mouseWasChecked = effect.mouse.active;
     effect.mouse.active = false;
 });
-hide.addEventListener('mouseleave' , () => {
+controlPanel.addEventListener('mouseleave' , () => {
     effect.mouse.active = mouseWasChecked;
 });
 
+const hide = document.getElementById('hide');
 const collapse = document.getElementById('col');
 collapse.addEventListener('click', () => {
     if (collapse.innerText === '*     *     *' && !hide.hidden){
