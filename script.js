@@ -356,20 +356,34 @@ const controlPanel = document.getElementById('control-panel');
 controlPanel.addEventListener('mouseenter' ,() => {
     mouseWasChecked = effect.mouse.active;
     effect.mouse.active = false;
+    console.log('inside');
 });
 controlPanel.addEventListener('mouseleave' , () => {
     effect.mouse.active = mouseWasChecked;
+    console.log('outside');
 });
 
 const hide = document.getElementById('hide');
 const collapse = document.getElementById('col');
-collapse.addEventListener('click', () => {
-    if (collapse.innerText === '*     *     *' && !hide.hidden){
-        collapse.innerText = '***';
+const collapseSVG = '<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 124 124" fill="none"><path d="M76.076 9.099 30.932 54.243a4 4 0 0 0 0 5.656l45.144 45.144c2.52 2.52 6.829.735 6.829-2.827v-90.29c0-3.563-4.309-5.347-6.829-2.827" fill="#fff"/></svg>';
+const expandSVG = '<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 124 124" fill="none"><path d="m37.924 110.901 45.144-45.144a4 4 0 0 0 0-5.656L37.924 14.957c-2.52-2.52-6.829-.735-6.829 2.827v90.29c0 3.563 4.309 5.347 6.829 2.827" fill="#fff"/></svg>';
+let collapsed = false;
+hide.hidden = false;
+if (collapse.innerHTML == collapseSVG) {
+    collapsed = false;
+}
+else {
+    collapse.innerHTML = collapseSVG;
+    collapsed = false;
+}
+
+function colExp(){
+    if (!collapsed && !hide.hidden){
+        collapse.innerHTML = expandSVG;
         hide.hidden = true;
     }
     else {
-        collapse.innerText = '*     *     *';
+        collapse.innerHTML = collapseSVG;
         hide.hidden = false;
     }
-});
+}
