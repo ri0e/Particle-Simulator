@@ -17,10 +17,9 @@ class Particle {
 
         this.pushX = 0;
         this.pushY = 0;
-        this.hue = Math.random() * 360;
     }
     draw(context){
-        context.fillStyle = 'hsl(' + this.hue + ', 70%, 50%)';
+        context.fillStyle = 'hsl(' + this.x / 2 + ', 70%, 50%)';
         context.beginPath();
         context.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
         context.fill();
@@ -30,12 +29,19 @@ class Particle {
             const dx = this.x - this.effect.mouse.x;
             const dy = this.y - this.effect.mouse.y;
             const distance = Math.hypot(dx, dy);
-            const force = (this.effect.mouse.radius / distance);
-
-            if(distance < this.effect.mouse.radius){
+            
+            if((distance < this.effect.mouse.radius) && this.effect.mouse.left){
+                const pushForce = this.effect.mouse.radius / distance;
                 const angle = Math.atan2(dy, dx);
-                this.pushX += Math.cos(angle) * force;
-                this.pushY += Math.sin(angle) * force;
+                this.pushX += Math.cos(angle) * pushForce;
+                this.pushY += Math.sin(angle) * pushForce;
+            }
+
+            if((distance < this.effect.mouse.radius) && this.effect.mouse.right){
+                const pullForce = distance / this.effect.mouse.radius;
+                const angle = Math.atan2(dy, dx);
+                this.pushX += (this.effect.mouse.x - this.x) * pullForce;
+                this.pushY += (this.effect.mouse.y - this.y) * pullForce;
             }
         }
         
@@ -90,45 +96,58 @@ class Effect {
             x: 0,
             y: 0,
             pressed: false,
+            left: false,
+            right: false,
             active: true,
             radius: 150,
         };
         
         window.addEventListener('mousemove', e => {
             if (this.mouse.active && this.mouse.pressed){
-            this.mouse.x = e.x;
-            this.mouse.y = e.y;
+                this.mouse.x = e.x;
+                this.mouse.y = e.y;
             }
         });
         window.addEventListener('mousedown', e => {
             if (this.mouse.active){
-            this.mouse.pressed = true;
-            this.mouse.x = e.x;
-            this.mouse.y = e.y;
+                this.mouse.pressed = true;
+                this.mouse.x = e.x;
+                this.mouse.y = e.y;
+                
+                if (e.button === 0){
+                    this.mouse.left = true;
+                }
+                if (e.button === 2){
+                    this.mouse.right = true;
+                }
             }
         });
         window.addEventListener('mouseup', () => {
             if (this.mouse.active){
-            this.mouse.pressed = false;
+                this.mouse.pressed = false;
+                this.mouse.left = false;
+                this.mouse.right = false;
             }
         });
 
         window.addEventListener('touchstart', e => {
             if (this.mouse.active && e.touches.length > 0) {
-            this.mouse.pressed = true;
-            this.mouse.x = e.touches[0].clientX;
-            this.mouse.y = e.touches[0].clientY;
+                this.mouse.pressed = true;
+                this.mouse.left = true;
+                this.mouse.x = e.touches[0].clientX;
+                this.mouse.y = e.touches[0].clientY;
             }
         });
         window.addEventListener('touchmove', e => {
             if (this.mouse.active && this.mouse.pressed && e.touches.length > 0) {
-            this.mouse.x = e.touches[0].clientX;
-            this.mouse.y = e.touches[0].clientY;
+                this.mouse.x = e.touches[0].clientX;
+                this.mouse.y = e.touches[0].clientY;
             }
         });
         window.addEventListener('touchend', () => {
             if (this.mouse.active){
-            this.mouse.pressed = false;
+                this.mouse.pressed = false;
+                this.mouse.left = false;
             }
         });
 
@@ -242,8 +261,6 @@ class Effect {
                                 p2.y += (overlap * ny) * (p1.mass / totalMass);
                             }
                         }
-                        
-                        [p1.hue, p2.hue] = [p2.hue, p1.hue];
                     }
                 }
 
@@ -272,6 +289,9 @@ class Effect {
 const canvas = document.getElementById('canvas1');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
+canvas.oncontextmenu = (e) => {
+    e.preventDefault();
+};
 
 const effect = new Effect(canvas);
 let appeared = false;
