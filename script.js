@@ -103,43 +103,27 @@ controlContainers.forEach((controlContainer) => {
 
 const controlPanels = Array.from(document.getElementsByClassName('control-panel'));
 const collapseButtons = Array.from(document.getElementsByClassName('collapse-btn'));
-const leftArrow = '<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 124 124" fill="none"><path d="M86 14 L40 62 L86 110" stroke="#fff" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>';
-const rightArrow = '<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 124 124" fill="none"><path d="M38 110 L84 62 L38 14" stroke="#fff" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>';
+const arrows = ['<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 124 124" fill="none"><path d="M86 14 L40 62 L86 110" stroke="#fff" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>', // 0: Left
+                '<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 124 124" fill="none"><path d="M38 110 L84 62 L38 14" stroke="#fff" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>', // 1: Right
+                '<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 124 124" fill="none"><path d="M14 86 L62 40 L110 86" stroke="#fff" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>', // 2: Up
+                '<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 124 124" fill="none"><path d="M14 38 L62 84 L110 38" stroke="#fff" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>' // 3: Down
+                ];
 
-const collapseLeft = collapseButtons[0];
-collapseLeft.innerHTML = leftArrow;
-let leftCollapsed = false;
-controlPanels[0].hidden = false;
-collapseLeft.addEventListener('click', () => {
-    if (!leftCollapsed && !controlPanels[0].hidden){
-        collapseLeft.innerHTML = rightArrow;
-        controlPanels[0].hidden = true;
-        collapseLeft.style.opacity = 0.3;
-        effect.mouse.active = mouseWasChecked;
-    }
-    else {
-        collapseLeft.innerHTML = leftArrow;
-        controlPanels[0].hidden = false;
-        collapseLeft.style.opacity = 1;
-        effect.mouse.active = mouseWasChecked;
-    }
-});
-
-const collapseRight = collapseButtons[1];
-collapseRight.innerHTML = rightArrow;
-let rightCollapsed = false;
-controlPanels[1].hidden = false;
-collapseRight.addEventListener('click', () => {
-    if (!rightCollapsed && !controlPanels[1].hidden){
-        collapseRight.innerHTML = leftArrow;
-        controlPanels[1].hidden = true;
-        collapseRight.style.opacity = 0.3;
-        effect.mouse.active = mouseWasChecked;
-    }
-    else {
-        collapseRight.innerHTML = rightArrow;
-        controlPanels[1].hidden = false;
-        collapseRight.style.opacity = 1;
-        effect.mouse.active = mouseWasChecked;
-    }
-});
+for (let i = 0; i < controlPanels.length; i++) {
+    collapseButtons[i].innerHTML = arrows[i % 4];
+    controlPanels[i].hidden = false;
+    collapseButtons[i].addEventListener('click', () => {
+        if (!controlPanels[i].hidden){
+            collapseButtons[i].innerHTML = arrows[(i ^ 1) % 4];
+            controlPanels[i].hidden = true;
+            collapseButtons[i].style.opacity = 0.3;
+            effect.mouse.active = mouseWasChecked;
+        }
+        else {
+            collapseButtons[i].innerHTML = arrows[i % 4];
+            controlPanels[i].hidden = false;
+            collapseButtons[i].style.opacity = 1;
+            effect.mouse.active = mouseWasChecked;
+        }
+    });
+}
