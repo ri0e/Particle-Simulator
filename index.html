@@ -8,14 +8,10 @@
 </head>
 <body>
     <canvas id="canvas1"></canvas>
-    
-    <div id="control-panel">
-        <div id="col">
-            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 124 124" fill="none">
-                <path d="m37.924 110.901 45.144-45.144a4 4 0 0 0 0-5.656L37.924 14.957c-2.52-2.52-6.829-.735-6.829 2.827v90.29c0 3.563 4.309 5.347 6.829 2.827" fill="#fff"/>
-            </svg>
-        </div>
-        <div id="hide">
+
+    <div class="control-container" id="c1">
+        <div class="collapse-btn" id="col"></div>
+        <div class="control-panel" id="hide">
             <div class="control">
                 <label for="nop">Number of Particles:</label>
                 <input class="number" id="nop" type="number" min="1" step="1">
@@ -54,6 +50,13 @@
             </div>
         </div>
     </div>
-    <script src="script.js"></script>
+
+    <div class="control-container" id="c2">
+        <div class="collapse-btn" id="col2"></div>
+        <div class="control-panel" id="hide2">
+            Hello
+        </div>
+    </div>
+    <script type="module" src="script.js"></script>
 </body>
 </html>
