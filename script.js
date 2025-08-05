@@ -90,7 +90,6 @@ radius.addEventListener('input', () => {
 });
 
 const controlContainers = Array.from(document.getElementsByClassName('control-container'));
-console.log(controlContainers);
 controlContainers.forEach((controlContainer) => {
     controlContainer.addEventListener('mouseenter' ,() => {
         mouseWasChecked = effect.mouse.active;
@@ -114,7 +113,7 @@ for (let i = 0; i < controlPanels.length; i++) {
     controlPanels[i].hidden = false;
     collapseButtons[i].addEventListener('click', () => {
         if (!controlPanels[i].hidden){
-            collapseButtons[i].innerHTML = arrows[(i ^ 1) % 4];
+            collapseButtons[i].innerHTML = arrows[(i % 4) ^ 1];
             controlPanels[i].hidden = true;
             collapseButtons[i].style.opacity = 0.3;
             effect.mouse.active = mouseWasChecked;
@@ -127,3 +126,13 @@ for (let i = 0; i < controlPanels.length; i++) {
         }
     });
 }
+
+const particleCanvas = document.getElementById('canvas2');
+particleCanvas.width = 200;
+particleCanvas.height = 200;
+const context = particleCanvas.getContext('2d');
+context.fillStyle = 'white';
+context.beginPath();
+context.arc(100, 100, 50, 0, Math.PI * 2);
+context.fill();
+console.log(context);

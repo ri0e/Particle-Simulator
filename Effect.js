@@ -3,6 +3,10 @@ class Particle {
         this.effect = effect;
         this.index = index;
 
+        this.hovered = false;
+        this.clicked = false;
+        this.selectionBuffer = 10;
+
         this.maxRadius = 20;
         this.minRadius = 5;
 
@@ -18,7 +22,29 @@ class Particle {
         this.pushX = 0;
         this.pushY = 0;
     }
+    handleSelection() {
+        const dx = this.x - this.effect.mouse.x;
+        const dy = this.y - this.effect.mouse.y;
+        const distance = Math.hypot(dx, dy);
+
+        this.hovered = distance <= this.radius + this.selectionBuffer;
+        this.clicked = this.effect.clickedParticles.includes(this);
+    }
     draw(context) {
+        this.handleSelection();
+        if (this.hovered) {
+            context.fillStyle = 'hsla(186, 100%, 50%, 0.19)';
+            context.beginPath();
+            context.arc(this.x, this.y, this.radius + 10, 0, Math.PI * 2);
+            context.fill();
+        }
+        if (this.clicked) {
+            context.fillStyle = 'hsla(186, 100%, 50%, 0.88)';
+            context.beginPath();
+            context.arc(this.x, this.y, this.radius + 10, 0, Math.PI * 2);
+            context.fill();
+        }
+
         context.fillStyle = 'hsl(' + this.x / 2 + ', 70%, 50%)';
         context.beginPath();
         context.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
@@ -77,6 +103,8 @@ export class Effect {
         this.width = this.canvas.width;
         this.height = this.canvas.height;
 
+        this.clickedParticles = [];
+
         this.createParticles(50);
 
         //booleans
@@ -98,34 +126,38 @@ export class Effect {
             right: false,
             active: true,
             radius: 150,
+            cursorRadius: 10,
+            draw(context) {
+                context.fillStyle = 'hsla(180, 100%, 50%, 0.91)';
+                context.beginPath();
+                context.arc(this.x, this.y, this.cursorRadius, 0, Math.PI * 2);
+                context.fill();
+            }
         };
 
         window.addEventListener('mousemove', e => {
-            if (this.mouse.active && this.mouse.pressed) {
-                this.mouse.x = e.x;
-                this.mouse.y = e.y;
-            }
+            this.mouse.x = e.x;
+            this.mouse.y = e.y;
         });
         window.addEventListener('mousedown', e => {
             if (this.mouse.active) {
                 this.mouse.pressed = true;
                 this.mouse.x = e.x;
                 this.mouse.y = e.y;
-
-                if (e.button === 0) {
-                    this.mouse.left = true;
-                }
-                if (e.button === 2) {
-                    this.mouse.right = true;
-                }
+            }
+            if (e.button === 0) {
+                this.mouse.left = true;
+            }
+            if (e.button === 2) {
+                this.mouse.right = true;
             }
         });
         window.addEventListener('mouseup', () => {
             if (this.mouse.active) {
                 this.mouse.pressed = false;
-                this.mouse.left = false;
-                this.mouse.right = false;
             }
+            this.mouse.left = false;
+            this.mouse.right = false;
         });
 
         window.addEventListener('touchstart', e => {
@@ -162,6 +194,31 @@ export class Effect {
 
         this.context.fillStyle = 'white';
         this.context.strokeStyle = 'white';
+    }
+    handleSelection(){
+        if (this.mouse.left) {
+            let clickedParticle = null;
+
+            for (const particle of this.particles) {
+                const dx = particle.x - this.mouse.x;
+                const dy = particle.y - this.mouse.y;
+                const distance = Math.hypot(dx, dy);
+
+                if (distance <= particle.radius + particle.selectionBuffer) {
+                    if (this.mouse.left) {
+                        clickedParticle = particle;
+                        break;
+                    }
+                }
+            }
+
+            if (clickedParticle) {
+                this.clickedParticles.length = 0;
+                this.clickedParticles.push(clickedParticle);
+            } else {
+                this.clickedParticles.length = 0;
+            }
+        }
     }
     createParticles(count) {
         this.particles = [];
@@ -226,7 +283,7 @@ export class Effect {
             for (let b = a; b < this.particles.length; b++) {
                 const p1 = this.particles[a];
                 const p2 = this.particles[b];
-
+                
                 const contact = p1.radius + p2.radius;
                 const dx = p1.x - p2.x;
                 const dy = p1.y - p2.y;
@@ -277,7 +334,15 @@ export class Effect {
     }
     animate = () => {
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        this.handleSelection();
         this.handleParticles(this.context);
+        if (this.mouse.active){
+            this.canvas.style.cursor = 'none';
+            this.mouse.draw(this.context);
+        } else{
+            this.canvas.style.cursor = 'auto';
+        }
+
         requestAnimationFrame(this.animate);
     };
 }

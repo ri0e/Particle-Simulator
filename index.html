@@ -1,62 +1,73 @@
 <!DOCTYPE html>
 <html lang = "en">
-<head>
-    <meta charset = "UTF-8">
-    <meta name = "viewport" content="width = device-width, initial-scale = 1.0">
-    <link rel="stylesheet" href="styles.css">
-    <title>Particles</title>
-</head>
-<body>
-    <canvas id="canvas1"></canvas>
+    <head>
+        <meta charset = "UTF-8">
+        <meta name = "viewport" content="width = device-width, initial-scale = 1.0">
+        <link rel="stylesheet" href="styles.css">
+        <title>Particles</title>
+    </head>
+    <body>
+        <canvas id="canvas1"></canvas>
 
-    <div class="control-container" id="c1">
-        <div class="collapse-btn" id="col"></div>
-        <div class="control-panel" id="hide">
-            <div class="control">
-                <label for="nop">Number of Particles:</label>
-                <input class="number" id="nop" type="number" min="1" step="1">
-            </div>
-            <div class="control">
-                <label for="speed">Simulation Speed:</label>
-                <input class="number" id="speed" type="number">
-            </div>
-            <div class="control">
-                <label for="mouse">Mouse Interaction:</label>
-                <input id="mouse" type="checkbox">
-            </div>
-            <div class="control">
-                <label for="mouseRadius">Mouse Radius:</label>
-                <input class="number" id="mouseRadius" type="number">
-            </div>
-            <div class="control">
-                <label for="collision">Collision:</label>
-                <input id="collision" type="checkbox">
-            </div>
-            <div class="control">
-                <label for="connect">Draw Lines:</label>
-                <input id="connect" type="checkbox">
-            </div>
-            <div class="control">
-                <label for="connectDistance">Line length:</label>
-                <input class="number" id="connectDistance" type="number" min="1" step="1">
-            </div>
-            <div class="control">
-                <label for="randomRadius">Random Radius:</label>
-                <input id="randomRadius" type="checkbox">
-            </div>
-            <div class="control">
-                <label for="radius">Radius:</label>
-                <input class="number" id="radius" type="number" min="1" step="1">
+        <div class="control-container" id="c1">
+            <div class="collapse-btn" id="col"></div>
+            <div class="control-panel" id="hide">
+                <div class="control">
+                    <label for="nop">Number of Particles:</label>
+                    <input class="number" id="nop" type="number" min="1" step="1">
+                </div>
+                <div class="control">
+                    <label for="speed">Simulation Speed:</label>
+                    <input class="number" id="speed" type="number">
+                </div>
+                <div class="control">
+                    <label for="mouse">Mouse Interaction:</label>
+                    <input id="mouse" type="checkbox">
+                </div>
+                <div class="control">
+                    <label for="mouseRadius">Mouse Radius:</label>
+                    <input class="number" id="mouseRadius" type="number">
+                </div>
+                <div class="control">
+                    <label for="collision">Collision:</label>
+                    <input id="collision" type="checkbox">
+                </div>
+                <div class="control">
+                    <label for="connect">Draw Lines:</label>
+                    <input id="connect" type="checkbox">
+                </div>
+                <div class="control">
+                    <label for="connectDistance">Line length:</label>
+                    <input class="number" id="connectDistance" type="number" min="1" step="1">
+                </div>
+                <div class="control">
+                    <label for="randomRadius">Random Radius:</label>
+                    <input id="randomRadius" type="checkbox">
+                </div>
+                <div class="control">
+                    <label for="radius">Radius:</label>
+                    <input class="number" id="radius" type="number" min="1" step="1">
+                </div>
             </div>
         </div>
-    </div>
 
-    <div class="control-container" id="c2">
-        <div class="collapse-btn" id="col2"></div>
-        <div class="control-panel" id="hide2">
-            Hello
+        <div class="control-container" id="c2">
+            <div class="collapse-btn" id="col2"></div>
+            <div class="control-panel" id="hide2">
+                <div id="Properties">
+                    <canvas id="canvas2"></canvas>
+                    <h1>Particle #123</h1>
+                    <p>X: 0</p>
+                    <p>Y: 0</p>
+                    <p>Radius: 0</p>
+                    <p>Mass: 0</p>
+                    <p>Velocity X: 0</p>
+                    <p>Velocity Y: 0</p>
+                    <p>Friction: 0</p>
+                    <p>Color: 0</p>
+                </div>
+            </div>
         </div>
-    </div>
-    <script type="module" src="script.js"></script>
-</body>
+        <script type="module" src="script.js"></script>
+    </body>
 </html>

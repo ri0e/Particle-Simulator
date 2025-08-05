@@ -15,6 +15,7 @@ body {
     top: 0;
     left: 0;
     z-index: 0;
+    cursor: none;
 }
 
 .control-container {
@@ -26,6 +27,22 @@ body {
 
 #c1 {left: 0;}
 #c2 {right: 0;}
+
+#canvas2 {
+    background: rgba(0, 0, 0, 0.5);
+    border: solid rgb(0, 242, 255) 2px;
+    margin: 0px 10px;
+    border-radius: 10%;
+    width: 200px;
+    height: 200px;
+}
+
+div h1 {
+    text-align: center;
+}
+div p{
+    margin: 1em;
+}
 
 .control-panel {
     height: 100%;
