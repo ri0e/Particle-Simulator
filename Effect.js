@@ -31,21 +31,23 @@ class Particle {
         this.clicked = this.effect.clickedParticles.includes(this);
     }
     draw(context) {
-        this.handleSelection();
-        if (this.hovered) {
-            context.fillStyle = 'hsla(186, 100%, 50%, 0.19)';
-            context.beginPath();
-            context.arc(this.x, this.y, this.radius + 10, 0, Math.PI * 2);
-            context.fill();
+        if (this.effect.selection) {
+            this.handleSelection();
+            if (this.hovered) {
+                context.fillStyle = 'hsla(186, 100%, 50%, 0.30)';
+                context.beginPath();
+                context.arc(this.x, this.y, this.radius + this.selectionBuffer, 0, Math.PI * 2);
+                context.fill();
+            }
+            if (this.clicked) {
+                context.fillStyle = 'hsla(186, 100%, 50%, 0.60)';
+                context.beginPath();
+                context.arc(this.x, this.y, this.radius + this.selectionBuffer, 0, Math.PI * 2);
+                context.fill();
+            }
         }
-        if (this.clicked) {
-            context.fillStyle = 'hsla(186, 100%, 50%, 0.88)';
-            context.beginPath();
-            context.arc(this.x, this.y, this.radius + 10, 0, Math.PI * 2);
-            context.fill();
-        }
-
-        context.fillStyle = 'hsl(' + this.x / 2 + ', 70%, 50%)';
+        this.color = 'hsl(' + this.x / 2 + ', 70%, 50%)';
+        context.fillStyle = this.color;
         context.beginPath();
         context.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
         context.fill();
@@ -103,6 +105,7 @@ export class Effect {
         this.width = this.canvas.width;
         this.height = this.canvas.height;
 
+        this.selection = false;
         this.clickedParticles = [];
 
         this.createParticles(50);
@@ -333,8 +336,8 @@ export class Effect {
         }
     }
     animate = () => {
+        if (this.selection) this.handleSelection();
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        this.handleSelection();
         this.handleParticles(this.context);
         if (this.mouse.active){
             this.canvas.style.cursor = 'none';

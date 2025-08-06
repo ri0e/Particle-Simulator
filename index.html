@@ -26,7 +26,11 @@
                 </div>
                 <div class="control">
                     <label for="mouseRadius">Mouse Radius:</label>
-                    <input class="number" id="mouseRadius" type="number">
+                    <input class="number" id="mouseRadius" type="number" min="1" step="1">
+                </div>
+                <div class="control">
+                    <label for="selection">Selection:</label>
+                    <input id="selection" type="checkbox">
                 </div>
                 <div class="control">
                     <label for="collision">Collision:</label>
@@ -56,15 +60,47 @@
             <div class="control-panel" id="hide2">
                 <div id="Properties">
                     <canvas id="canvas2"></canvas>
-                    <h1>Particle #123</h1>
-                    <p>X: 0</p>
-                    <p>Y: 0</p>
-                    <p>Radius: 0</p>
-                    <p>Mass: 0</p>
-                    <p>Velocity X: 0</p>
-                    <p>Velocity Y: 0</p>
-                    <p>Friction: 0</p>
-                    <p>Color: 0</p>
+                    <h1 id="index">Particle #123</h1>
+                    <!-- X -->
+                    <div class="control">
+                        <label for="X">X: </label>
+                        <input class="number" id="X" type="number" min="1" step="1" value="0">
+                    </div>
+                    <!-- Y -->
+                    <div class="control">
+                        <label for="Y">Y: </label>
+                        <input class="number" id="Y" type="number" min="1" step="1" value="0">
+                    </div>
+                    <!-- Radius -->
+                    <div class="control">
+                        <label for="Pradius">Radius: </label>
+                        <input class="number" id="Pradius" type="number" min="1" step="1" value="0">
+                    </div>
+                    <!-- Mass -->
+                    <div class="control">
+                        <label for="mass">Mass: </label>
+                        <input class="number" id="mass" type="number" min="1" step="1" value="0">
+                    </div>
+                    <!-- VX -->
+                    <div class="control">
+                        <label for="vx">Velocity X: </label>
+                        <input class="number" id="vx" type="number" min="1" step="1" value="0">
+                    </div>
+                    <!-- VY -->
+                    <div class="control">
+                        <label for="vy">Velocity Y: </label>
+                        <input class="number" id="vy" type="number" min="1" step="1" value="0">
+                    </div>
+                    <!-- Friction -->
+                    <div class="control">
+                        <label for="friction">Friction: </label>
+                        <input class="number" id="friction" type="number" min="1" step="1" value="0">
+                    </div>
+                    <!-- color -->
+                    <div class="control">
+                        <label for="colour">Color: </label>
+                        <input class="number" id="colour" type="color" value="#ffffff">
+                    </div>
                 </div>
             </div>
         </div>
