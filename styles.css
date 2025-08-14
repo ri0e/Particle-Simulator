@@ -28,39 +28,23 @@ body {
 #c1 {left: 0;}
 #c2 {right: 0;}
 
-#canvas2 {
-    background: rgba(0, 0, 0, 0.5);
-    border: solid rgb(0, 242, 255) 2px;
-    margin: 0px 10px;
-    border-radius: 10%;
-    width: 200px;
-    height: 200px;
-}
-
-div h1 {
-    text-align: center;
-}
-div p{
-    margin: 1em;
-}
-
 .control-panel {
+    overflow: scroll;
     height: 100%;
     width: fit-content;
-    padding: 0px 10px;
-    padding-top: 1em;
-    border: 4px solid cyan;
+    padding: 0px 0.6em;
+    border: 0.3em solid cyan;
     background-color: rgba(0, 0, 0, 0.6);
     backdrop-filter: blur(15px);
-    overflow-x: scroll;
     margin: 0;
     color: white;
     z-index: 1;
 }
 
 .control {
-    padding: 0px 10px;
-    margin-bottom: 10px;
+    width: fit-content;
+    padding: 0px 0.9em;
+    margin-top: 0.95em;
 }
 
 .collapse-btn {
@@ -78,6 +62,87 @@ div p{
 #col {left: 100%;}
 #col2 {right: 100%}
 
+#canvas2 {
+    background: rgba(0, 0, 0, 0.5);
+    border: solid rgb(0, 242, 255) 0.2em;
+    margin: 0px 0.5em;
+    border-radius: 10%;
+    width: fit-content;
+    height: fit-content;
+    margin-top: 1em;
+}
+
+#hide {
+    overflow: visible;
+}
+
+#hide h3 {
+    margin-top: 0.90em;
+}
+
+.control input:disabled {
+    padding: 0;
+    margin: 0;
+    margin-left: 0.2em;
+    background-color: transparent; 
+    color: #fff;
+    border-style: transparent;
+    cursor: not-allowed;
+}
+
+#edit {
+    background-color: #2ea44f;
+    border: 0.1em solid rgba(27, 31, 35, .15);
+    border-radius: 0.4em;
+    box-shadow: rgba(27, 31, 35, .1) 0 0.1em 0;
+    box-sizing: border-box;
+    color: #fff;
+    cursor: pointer;
+    display: inline-block;
+    margin-top: 0.5em;
+    font-size: 0.85em;
+    font-weight: 600;
+    line-height: 1.4em;
+    padding: 0.4em 0.80em;
+}
+
+div h1 {
+    text-align: center;
+    margin-bottom: 0.74em;
+}
+
 input.number{
     width: 5em;
+}
+
+.tooltip {
+    position: relative;
+}
+
+.tooltip .tooltiptext {
+    font-size: 0.75em;
+    display: none;
+    visibility: hidden;
+    width: 15em;
+    background-color: #000000;
+    color: #ffffff;
+    border: 0.1em solid cyan;
+    text-align: center;
+    border-radius: 0.3em;
+    padding: 0.2em 0.5em;
+    position: absolute;
+    z-index: 5;
+    top: -5px;
+    left: 110%;
+}
+
+.tooltip .tooltiptext .mini {
+    margin: 0;
+    padding: 0;
+    font-size: 0.5em;
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+    display: block
 }

@@ -5,6 +5,7 @@ class Particle {
 
         this.hovered = false;
         this.clicked = false;
+        this.isBeingEdited = false;
         this.selectionBuffer = 10;
 
         this.maxRadius = 20;
@@ -23,76 +24,99 @@ class Particle {
         this.pushY = 0;
     }
     handleSelection() {
-        const dx = this.x - this.effect.mouse.x;
-        const dy = this.y - this.effect.mouse.y;
-        const distance = Math.hypot(dx, dy);
-
-        this.hovered = distance <= this.radius + this.selectionBuffer;
-        this.clicked = this.effect.clickedParticles.includes(this);
+        if (this.effect.selection) {
+            const dx = this.x - this.effect.mouse.x;
+            const dy = this.y - this.effect.mouse.y;
+            const distance = Math.hypot(dx, dy);
+    
+            this.hovered = distance <= (this.radius + this.selectionBuffer);
+            this.clicked = this.effect.clickedParticles.includes(this);
+        } else {
+            this.hovered = false;
+        }
     }
     draw(context) {
-        if (this.effect.selection) {
-            this.handleSelection();
-            if (this.hovered) {
-                context.fillStyle = 'hsla(186, 100%, 50%, 0.30)';
-                context.beginPath();
-                context.arc(this.x, this.y, this.radius + this.selectionBuffer, 0, Math.PI * 2);
-                context.fill();
-            }
-            if (this.clicked) {
-                context.fillStyle = 'hsla(186, 100%, 50%, 0.60)';
-                context.beginPath();
-                context.arc(this.x, this.y, this.radius + this.selectionBuffer, 0, Math.PI * 2);
-                context.fill();
-            }
+        this.handleSelection();
+        if (this.hovered) {
+            context.fillStyle = 'hsla(186, 100%, 50%, 0.30)';
+            context.beginPath();
+            context.arc(this.x, this.y, this.radius + this.selectionBuffer, 0, Math.PI * 2);
+            context.fill();
         }
-        this.color = 'hsl(' + this.x / 2 + ', 70%, 50%)';
+        if (this.clicked) {
+            context.fillStyle = 'hsla(186, 100%, 50%, 0.60)';
+            context.beginPath();
+            context.arc(this.x, this.y, this.radius + this.selectionBuffer, 0, Math.PI * 2);
+            context.fill();
+        }
+        
+        this.color = this.colorChosen ?  this.color : 'hsl(' + this.x / 2 + ', 70%, 50%)';
         context.fillStyle = this.color;
         context.beginPath();
         context.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
         context.fill();
     }
     update() {
-        if (this.effect.mouse.pressed) {
-            const dx = this.x - this.effect.mouse.x;
-            const dy = this.y - this.effect.mouse.y;
-            const distance = Math.hypot(dx, dy);
+        if (!this.isBeingEdited){
+            if (this.effect.mouse.pressed) {
+                const dx = this.x - this.effect.mouse.x;
+                const dy = this.y - this.effect.mouse.y;
+                const distance = Math.hypot(dx, dy);
 
-            if ((distance < this.effect.mouse.radius) && this.effect.mouse.left) {
-                const pushForce = this.effect.mouse.radius / distance;
-                const angle = Math.atan2(dy, dx);
-                this.pushX += Math.cos(angle) * pushForce;
-                this.pushY += Math.sin(angle) * pushForce;
+                if ((distance < this.effect.mouse.radius) && this.effect.mouse.left) {
+                    const pushForce = this.effect.mouse.radius / distance;
+                    const angle = Math.atan2(dy, dx);
+                    this.pushX += Math.cos(angle) * pushForce;
+                    this.pushY += Math.sin(angle) * pushForce;
+                }
+                if ((distance < this.effect.mouse.radius) && this.effect.mouse.right) {
+                    const pullForce = distance / this.effect.mouse.radius;
+                    this.pushX += (this.effect.mouse.x - this.x) * pullForce;
+                    this.pushY += (this.effect.mouse.y - this.y) * pullForce;
+                }
             }
+            
+            this.x += (this.pushX *= this.effect.friction) + (this.vx * Math.abs(this.effect.speed));
+            this.y += (this.pushY *= this.effect.friction) + (this.vy * Math.abs(this.effect.speed));
 
-            if ((distance < this.effect.mouse.radius) && this.effect.mouse.right) {
-                const pullForce = distance / this.effect.mouse.radius;
-                this.pushX += (this.effect.mouse.x - this.x) * pullForce;
-                this.pushY += (this.effect.mouse.y - this.y) * pullForce;
+            if (this.x < this.radius) {
+                this.x = this.radius;
+                if (this.vx < 0) this.vx *= -1;
+                if (this.pushX < 0) this.pushX *= -1;
+            } else if (this.x > this.effect.width - this.radius) {
+                this.x = this.effect.width - this.radius;
+                if (this.vx > 0) this.vx *= -1;
+                if (this.pushX > 0) this.pushX *= -1;
+            }
+            if (this.y < this.radius) {
+                this.y = this.radius;
+                if (this.vy < 0) this.vy *= -1;
+                if (this.pushY < 0) this.pushY *= -1;
+            } else if (this.y > this.effect.height - this.radius) {
+                this.y = this.effect.height - this.radius;
+                if (this.vy > 0) this.vy *= -1;
+                if (this.pushY > 0) this.pushY *= -1;
             }
         }
+    }
+    updateRadius(radius){
+        this.radius = radius;
 
-        this.x += (this.pushX *= this.effect.friction) + (this.vx * this.effect.speed);
-        this.y += (this.pushY *= this.effect.friction) + (this.vy * this.effect.speed);
-
-        if (this.x < this.radius) {
-            this.x = this.radius;
-            if (this.vx < 0) this.vx *= -1;
-            if (this.pushX < 0) this.pushX *= -1;
-        } else if (this.x > this.effect.width - this.radius) {
-            this.x = this.effect.width - this.radius;
-            if (this.vx > 0) this.vx *= -1;
-            if (this.pushX > 0) this.pushX *= -1;
+        console.log(this.width);
+        this.x = Math.max(this.radius, Math.min(this.x, this.effect.width - this.radius));
+        this.y = Math.max(this.radius, Math.min(this.y, this.effect.height - this.radius));
+    }
+    updatePosition(attribute, value) {
+        attribute = attribute.toUpperCase();
+        if (attribute === 'X') {
+            this.x = Math.max(this.radius, Math.min(value, this.effect.width - this.radius));
+        } else if (attribute === 'Y') {
+            this.y = Math.max(this.radius, Math.min(value, this.effect.height - this.radius));
         }
-        if (this.y < this.radius) {
-            this.y = this.radius;
-            if (this.vy < 0) this.vy *= -1;
-            if (this.pushY < 0) this.pushY *= -1;
-        } else if (this.y > this.effect.height - this.radius) {
-            this.y = this.effect.height - this.radius;
-            if (this.vy > 0) this.vy *= -1;
-            if (this.pushY > 0) this.pushY *= -1;
-        }
+    }
+    updateColor(color) {
+        this.colorChosen = true;
+        this.color = color;
     }
 }
 export class Effect {
@@ -105,7 +129,7 @@ export class Effect {
         this.width = this.canvas.width;
         this.height = this.canvas.height;
 
-        this.selection = false;
+        this.selection = true;
         this.clickedParticles = [];
 
         this.createParticles(50);
@@ -125,16 +149,19 @@ export class Effect {
             x: 0,
             y: 0,
             pressed: false,
+            select: false,
             left: false,
             right: false,
             active: true,
             radius: 150,
             cursorRadius: 10,
             draw(context) {
-                context.fillStyle = 'hsla(180, 100%, 50%, 0.91)';
-                context.beginPath();
-                context.arc(this.x, this.y, this.cursorRadius, 0, Math.PI * 2);
-                context.fill();
+                if (this.active){
+                    context.fillStyle = 'hsla(180, 100%, 50%, 0.91)';
+                    context.beginPath();
+                    context.arc(this.x, this.y, this.cursorRadius, 0, Math.PI * 2);
+                    context.fill();
+                }
             }
         };
 
@@ -143,11 +170,10 @@ export class Effect {
             this.mouse.y = e.y;
         });
         window.addEventListener('mousedown', e => {
-            if (this.mouse.active) {
+            if (this.selection) 
+                this.mouse.select = true;
+            if (this.mouse.active)
                 this.mouse.pressed = true;
-                this.mouse.x = e.x;
-                this.mouse.y = e.y;
-            }
             if (e.button === 0) {
                 this.mouse.left = true;
             }
@@ -156,33 +182,32 @@ export class Effect {
             }
         });
         window.addEventListener('mouseup', () => {
-            if (this.mouse.active) {
-                this.mouse.pressed = false;
-            }
+            this.mouse.pressed = false;
+            this.mouse.select = false;
             this.mouse.left = false;
             this.mouse.right = false;
         });
 
-        window.addEventListener('touchstart', e => {
-            if (this.mouse.active && e.touches.length > 0) {
-                this.mouse.pressed = true;
-                this.mouse.left = true;
-                this.mouse.x = e.touches[0].clientX;
-                this.mouse.y = e.touches[0].clientY;
-            }
-        });
-        window.addEventListener('touchmove', e => {
-            if (this.mouse.active && this.mouse.pressed && e.touches.length > 0) {
-                this.mouse.x = e.touches[0].clientX;
-                this.mouse.y = e.touches[0].clientY;
-            }
-        });
-        window.addEventListener('touchend', () => {
-            if (this.mouse.active) {
-                this.mouse.pressed = false;
-                this.mouse.left = false;
-            }
-        });
+        // window.addEventListener('touchstart', e => {
+        //     if (this.mouse.active && e.touches.length > 0) {
+        //         this.mouse.pressed = true;
+        //         this.mouse.left = true;
+        //         this.mouse.x = e.touches[0].clientX;
+        //         this.mouse.y = e.touches[0].clientY;
+        //     }
+        // });
+        // window.addEventListener('touchmove', e => {
+        //     if (this.mouse.active && this.mouse.pressed && e.touches.length > 0) {
+        //         this.mouse.x = e.touches[0].clientX;
+        //         this.mouse.y = e.touches[0].clientY;
+        //     }
+        // });
+        // window.addEventListener('touchend', () => {
+        //     if (this.mouse.active) {
+        //         this.mouse.pressed = false;
+        //         this.mouse.left = false;
+        //     }
+        // });
 
         window.addEventListener('resize', () => {
             this.resize(window.innerWidth, window.innerHeight);
@@ -240,24 +265,25 @@ export class Effect {
             }
             particle.mass = particle.mass = Math.PI * particle.radius ** 2;
             this.particles.push(particle);
+            this.numberOfParticles = this.particles.length;
         }
-        this.numberOfParticles = this.particles.length;
     }
     removeParticles(count) {
         for (let i = 0; i < count; i++) {
             if (this.particles.length) {
                 this.particles.pop();
+                this.numberOfParticles = this.particles.length;
             }
         }
-        this.numberOfParticles = this.particles.length;
     }
     updateParticles(newCount) {
         const difference = newCount - this.numberOfParticles;
         if (difference > 0) {
-            this.addParticles(difference);
+            this.addParticles(Math.abs(difference));
         } else if (difference < 0) {
-            this.removeParticles(-difference);
+            this.removeParticles(Math.abs(difference));
         }
+        this.numberOfParticles = this.particles.length;
     }
     updateRadius(bool) {
         this.particles.forEach(particle => {

@@ -12,45 +12,68 @@
         <div class="control-container" id="c1">
             <div class="collapse-btn" id="col"></div>
             <div class="control-panel" id="hide">
-                <div class="control">
+                <h3>Simulation Settings</h3>
+                <!--Particle Number-->
+                <div class="control tooltip">
                     <label for="nop">Number of Particles:</label>
                     <input class="number" id="nop" type="number" min="1" step="1">
+                    <div class="tooltiptext"> The number of particles on screen. <div class="mini">Higher numbers cause performance issues.</div></div>
                 </div>
-                <div class="control">
+                <!--Simulation Speed-->
+                <div class="control tooltip">
                     <label for="speed">Simulation Speed:</label>
-                    <input class="number" id="speed" type="number">
+                    <input class="number" id="speed" type="number" min="0">
+                    <div class="tooltiptext"> How fast do you want the simulation to go? <div class="mini">You can use decimal values to make it slower.</div></div>
                 </div>
-                <div class="control">
-                    <label for="mouse">Mouse Interaction:</label>
-                    <input id="mouse" type="checkbox">
-                </div>
-                <div class="control">
-                    <label for="mouseRadius">Mouse Radius:</label>
-                    <input class="number" id="mouseRadius" type="number" min="1" step="1">
-                </div>
-                <div class="control">
-                    <label for="selection">Selection:</label>
-                    <input id="selection" type="checkbox">
-                </div>
-                <div class="control">
+                <!--Collision-->
+                <div class="control tooltip">
                     <label for="collision">Collision:</label>
                     <input id="collision" type="checkbox">
+                    <div class="tooltiptext">Do you want the particles to have collision? <div class="mini">May cause performance issues</div></div>
                 </div>
-                <div class="control">
+                <!--Draw Lines-->
+                <div class="control tooltip">
                     <label for="connect">Draw Lines:</label>
                     <input id="connect" type="checkbox">
+                    <div class="tooltiptext">Do you want to draw lines connecting particles. within a certain distance?<div class="mini">May cause performance issues.</div></div>
                 </div>
-                <div class="control">
+                <!--Line Length-->
+                <div class="control tooltip">
                     <label for="connectDistance">Line length:</label>
                     <input class="number" id="connectDistance" type="number" min="1" step="1">
+                    <div class="tooltiptext">Maximum distance between particles to draw lines.<div class="mini">Positive values.</div></div>
                 </div>
-                <div class="control">
+                 <!--Selection-->
+                <div class="control tooltip">
+                    <label for="selection">Selection:</label>
+                    <input id="selection" type="checkbox">
+                    <div class="tooltiptext">Ability to select each particles.<div class="mini">And edit their properties.</div></div>
+                </div>
+                <h3>Mouse Settings</h3>
+                <!--Mouse Interaction-->
+                <div class="control tooltip">
+                    <label for="mouse">Mouse Interaction:</label>
+                    <input id="mouse" type="checkbox">
+                    <div class="tooltiptext">Pushing and pulling on particles.<div class="mini">Push (primary) Pull (secondary)</div></div>
+                </div>
+                <!--Mouse Radius-->
+                <div class="control tooltip">
+                    <label for="mouseRadius">Mouse Radius:</label>
+                    <input class="number" id="mouseRadius" type="number" min="1" step="1">
+                    <div class="tooltiptext">Distance from the cursor where effects apply.<div class="mini">Experiment with it.</div></div>
+                </div>
+                <h3>Particle Settings</h3>
+                <!--Random Particle Radius-->
+                <div class="control tooltip">
                     <label for="randomRadius">Random Radius:</label>
                     <input id="randomRadius" type="checkbox">
+                    <div class="tooltiptext">When checked:<div class="mini">Paricles have random radius upto the radius value.</div></div>
                 </div>
-                <div class="control">
+                <!--Particle Radius-->
+                <div class="control tooltip">
                     <label for="radius">Radius:</label>
                     <input class="number" id="radius" type="number" min="1" step="1">
+                    <div class="tooltiptext">Value for radiust of the particles.<div class="mini">Same if not checked; Random if checked.</div></div>
                 </div>
             </div>
         </div>
@@ -64,46 +87,50 @@
                     <!-- X -->
                     <div class="control">
                         <label for="X">X: </label>
-                        <input class="number" id="X" type="number" min="1" step="1" value="0">
+                        <input class="number" id="X" type="number" min="1" step="1" value="0" disabled>
                     </div>
                     <!-- Y -->
                     <div class="control">
                         <label for="Y">Y: </label>
-                        <input class="number" id="Y" type="number" min="1" step="1" value="0">
+                        <input class="number" id="Y" type="number" min="1" step="1" value="0" disabled>
                     </div>
                     <!-- Radius -->
                     <div class="control">
                         <label for="Pradius">Radius: </label>
-                        <input class="number" id="Pradius" type="number" min="1" step="1" value="0">
+                        <input class="number" id="Pradius" type="number" min="1" step="1" value="0" disabled>
                     </div>
                     <!-- Mass -->
                     <div class="control">
                         <label for="mass">Mass: </label>
-                        <input class="number" id="mass" type="number" min="1" step="1" value="0">
+                        <input class="number" id="mass" type="number" step="1" value="0" disabled>
                     </div>
                     <!-- VX -->
                     <div class="control">
                         <label for="vx">Velocity X: </label>
-                        <input class="number" id="vx" type="number" min="1" step="1" value="0">
+                        <input class="number" id="vx" type="number" step="1" value="0" disabled>
                     </div>
                     <!-- VY -->
                     <div class="control">
                         <label for="vy">Velocity Y: </label>
-                        <input class="number" id="vy" type="number" min="1" step="1" value="0">
+                        <input class="number" id="vy" type="number" step="1" value="0" disabled>
                     </div>
-                    <!-- Friction -->
+                    <!-- Friction
                     <div class="control">
                         <label for="friction">Friction: </label>
-                        <input class="number" id="friction" type="number" min="1" step="1" value="0">
-                    </div>
+                        <input class="number" id="friction" type="number" step="1" value="0" disabled>
+                    </div> -->
                     <!-- color -->
                     <div class="control">
                         <label for="colour">Color: </label>
-                        <input class="number" id="colour" type="color" value="#ffffff">
+                        <input class="number" id="colour" type="color" value="#ffffff" disabled>
+                        <input id="color-based" type="checkbox" disabled>
                     </div>
+                    <!-- Edit button-->
+                    <button id="edit">Edit</button>
                 </div>
             </div>
         </div>
         <script type="module" src="script.js"></script>
+        <script type="module" src="properties.js"></script>
     </body>
 </html>

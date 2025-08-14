@@ -1,5 +1,4 @@
-import { Effect } from "./Effect.js";
-import { hslToHex } from "./functions.js";
+import { Effect } from "./src/Effect.js";
 
 const canvas = document.getElementById('canvas1');
 canvas.width = window.innerWidth;
@@ -8,7 +7,7 @@ canvas.oncontextmenu = (e) => {
     e.preventDefault();
 };
 
-const effect = new Effect(canvas);
+export const effect = new Effect(canvas);
 let appeared = false;
 let appeared2 = false;
 effect.animate();
@@ -19,12 +18,13 @@ controlContainers.forEach((controlContainer) => {
     controlContainer.addEventListener('mouseenter' ,() => {
         mouseWasChecked = effect.mouse.active;
         effect.mouse.active = false;
+        effect.selection = false;
     });
     controlContainer.addEventListener('mouseleave' , () => {
         effect.mouse.active = mouseWasChecked;
+        effect.selection = selectionWasChecked;
     });
 });
-
 const controlPanels = Array.from(document.getElementsByClassName('control-panel'));
 const collapseButtons = Array.from(document.getElementsByClassName('collapse-btn'));
 const arrows = ['<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 124 124" fill="none"><path d="M86 14 L40 62 L86 110" stroke="#fff" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>', // 0: Left
@@ -32,7 +32,6 @@ const arrows = ['<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" 
                 '<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 124 124" fill="none"><path d="M14 86 L62 40 L110 86" stroke="#fff" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>', // 2: Up
                 '<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 124 124" fill="none"><path d="M14 38 L62 84 L110 38" stroke="#fff" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>' // 3: Down
                 ];
-
 for (let i = 0; i < controlPanels.length; i++) {
     collapseButtons[i].innerHTML = arrows[i % 4];
     controlPanels[i].hidden = false;
@@ -103,14 +102,23 @@ mouseInteractionCheck.addEventListener('input', () => {
 });
 const mouseRadius = document.getElementById('mouseRadius');
 mouseRadius.value = effect.mouse.radius;
-mouseRadius.parentElement.hidden = !mouseRadius.value;
+mouseRadius.parentElement.hidden = !mouseInteractionCheck.checked;
 mouseRadius.addEventListener('input', () => {
     effect.mouse.radius = mouseRadius.value;
 });
 const selectionCheck = document.getElementById('selection');
 selectionCheck.checked = effect.selection;
+let selectionWasChecked = selectionCheck.checked;
+controlContainers[1].hidden = !selectionCheck.checked;
 selectionCheck.addEventListener('input', () => {
     effect.selection = selectionCheck.checked;
+    selectionWasChecked = selectionCheck.checked;
+    controlContainers[1].hidden = !selectionCheck.checked;
+    collapseButtons[1].innerHTML = arrows[1 % 4];
+    controlPanels[1].hidden = false;
+    collapseButtons[1].style.opacity = 1;
+    effect.mouse.active = mouseWasChecked;
+    
 });
 const randomRadiusCheck = document.getElementById('randomRadius');
 effect.constRadius = !randomRadiusCheck.checked;
@@ -128,39 +136,3 @@ radius.addEventListener('input', () => {
     }
 });
 //#endregion
-
-//#region Properties Panels
-const particleCanvas = document.getElementById('canvas2');
-const particleIndex = document.getElementById('index');
-const particleX = document.getElementById('X');
-const particleY = document.getElementById('Y');
-const particleRadius = document.getElementById('Pradius');
-const particleMass = document.getElementById('mass');
-const particleVX = document.getElementById('vx');
-const particleVY = document.getElementById('vy');
-const particleColor = document.getElementById('colour');
-particleCanvas.width = 200;
-particleCanvas.height = 200;
-const context = particleCanvas.getContext('2d');
-particleProperties();
-function particleProperties() {
-    if (effect.clickedParticles.length > 0) {
-        const particle = effect.clickedParticles[0];
-        context.fillStyle = `${particle.color}`;
-        particleIndex.textContent = `Particle #${particle.index}`;
-        particleX.value = particle.x;
-        particleY.value = particle.y;
-        particleRadius.value = particle.radius;
-        particleMass.value = particle.mass;
-        particleVX.value = particle.vx;
-        particleVY.value = particle.vy;
-        particleColor.value = hslToHex(particle.color);
-    }
-    else context.fillStyle = 'hsla( 23, 88%, 100%, 1.00)';
-    context.beginPath();
-    context.arc(100, 100, 50, 0, Math.PI * 2);
-    context.fill();
-
-    requestAnimationFrame(particleProperties);
-}
-//#endregions
