@@ -15,7 +15,7 @@ const particleX = document.getElementById('X');
 particleX.addEventListener('change', () => {
     if (edit) {
         particle.updatePosition('X',parseFloat(particleX.value));
-        debounce(updateProperties(), 1000);
+        updateProperties();
     }
 });
 
