@@ -18,7 +18,6 @@ particleX.addEventListener('change', () => {
         updateProperties();
     }
 });
-
 const particleY = document.getElementById('Y');
 particleY.addEventListener('change', () => {
     if (edit) {
@@ -26,15 +25,13 @@ particleY.addEventListener('change', () => {
         updateProperties();
     }
 });
-
 const particleRadius = document.getElementById('Pradius');
-particleRadius.addEventListener('change', (e) => {
+particleRadius.addEventListener('change', () => {
     if (edit) {
         particle.updateRadius(parseFloat(particleRadius.value));
         updateProperties();
     }
 });
-
 const particleMass = document.getElementById('mass');
 particleMass.addEventListener('change', () => {
     if (edit) {
@@ -42,7 +39,6 @@ particleMass.addEventListener('change', () => {
         updateProperties();
     }
 });
-
 const particleVX = document.getElementById('vx');
 particleVX.addEventListener('change', () => {
     if (edit) {
@@ -50,7 +46,6 @@ particleVX.addEventListener('change', () => {
         updateProperties();
     }
 });
-
 const particleVY = document.getElementById('vy');
 particleVY.addEventListener('change', () => {
     if (edit) {
@@ -58,14 +53,12 @@ particleVY.addEventListener('change', () => {
         updateProperties();
     }
 });
-
 const basedOnColor = document.getElementById('color-based');
 basedOnColor.addEventListener('input', () => {
     if (edit) {
         particle.colorChosen = basedOnColor.checked;
     }
 });
-
 const particleColor = document.getElementById('colour');
 particleColor.addEventListener('input', () => {
     if (edit) {

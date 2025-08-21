@@ -10,8 +10,9 @@ class Particle {
 
         this.maxRadius = 20;
         this.minRadius = 5;
-
+        
         this.radius = 20;
+        this.collisionRadius = this.radius - 3;
         this.mass = Math.PI * this.radius ** 2;
 
         this.x = this.radius + Math.random() * (this.effect.width - this.radius * 2);
@@ -35,30 +36,31 @@ class Particle {
             this.hovered = false;
         }
     }
-    draw(context) {
-        this.handleSelection();
-        if (this.hovered) {
-            context.fillStyle = 'hsla(186, 100%, 50%, 0.30)';
-            context.beginPath();
-            context.arc(this.x, this.y, this.radius + this.selectionBuffer, 0, Math.PI * 2);
-            context.fill();
+    idleAnimation() {
+        this.x += (this.pushX *= this.effect.friction) + (this.vx * Math.abs(this.effect.speed));
+        this.y += (this.pushY *= this.effect.friction) + (this.vy * Math.abs(this.effect.speed));
+
+        if (this.x < this.radius) {
+            this.x = this.radius;
+            if (this.vx < 0) this.vx *= -1;
+            if (this.pushX < 0) this.pushX *= -1;
+        } else if (this.x > this.effect.width - this.radius) {
+            this.x = this.effect.width - this.radius;
+            if (this.vx > 0) this.vx *= -1;
+            if (this.pushX > 0) this.pushX *= -1;
         }
-        if (this.clicked) {
-            context.fillStyle = 'hsla(186, 100%, 50%, 0.60)';
-            context.beginPath();
-            context.arc(this.x, this.y, this.radius + this.selectionBuffer, 0, Math.PI * 2);
-            context.fill();
+        if (this.y < this.radius) {
+            this.y = this.radius;
+            if (this.vy < 0) this.vy *= -1;
+            if (this.pushY < 0) this.pushY *= -1;
+        } else if (this.y > this.effect.height - this.radius) {
+            this.y = this.effect.height - this.radius;
+            if (this.vy > 0) this.vy *= -1;
+            if (this.pushY > 0) this.pushY *= -1;
         }
-        
-        this.color = this.colorChosen ?  this.color : 'hsl(' + this.x / 2 + ', 70%, 50%)';
-        context.fillStyle = this.color;
-        context.beginPath();
-        context.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-        context.fill();
     }
-    update() {
-        if (!this.isBeingEdited){
-            if (this.effect.mouse.pressed) {
+    mouseInteraction(){
+        if (this.effect.mouse.pressed) {
                 const dx = this.x - this.effect.mouse.x;
                 const dy = this.y - this.effect.mouse.y;
                 const distance = Math.hypot(dx, dy);
@@ -75,29 +77,6 @@ class Particle {
                     this.pushY += (this.effect.mouse.y - this.y) * pullForce;
                 }
             }
-            
-            this.x += (this.pushX *= this.effect.friction) + (this.vx * Math.abs(this.effect.speed));
-            this.y += (this.pushY *= this.effect.friction) + (this.vy * Math.abs(this.effect.speed));
-
-            if (this.x < this.radius) {
-                this.x = this.radius;
-                if (this.vx < 0) this.vx *= -1;
-                if (this.pushX < 0) this.pushX *= -1;
-            } else if (this.x > this.effect.width - this.radius) {
-                this.x = this.effect.width - this.radius;
-                if (this.vx > 0) this.vx *= -1;
-                if (this.pushX > 0) this.pushX *= -1;
-            }
-            if (this.y < this.radius) {
-                this.y = this.radius;
-                if (this.vy < 0) this.vy *= -1;
-                if (this.pushY < 0) this.pushY *= -1;
-            } else if (this.y > this.effect.height - this.radius) {
-                this.y = this.effect.height - this.radius;
-                if (this.vy > 0) this.vy *= -1;
-                if (this.pushY > 0) this.pushY *= -1;
-            }
-        }
     }
     updateRadius(radius){
         this.radius = radius;
@@ -117,6 +96,32 @@ class Particle {
     updateColor(color) {
         this.colorChosen = true;
         this.color = color;
+    }
+    draw(context) {
+        this.handleSelection();
+        if (this.hovered) {
+            context.fillStyle = 'hsla(186, 100%, 50%, 0.30)';
+            context.beginPath();
+            context.arc(this.x, this.y, this.radius + this.selectionBuffer, 0, Math.PI * 2);
+            context.fill();
+        }
+        if (this.clicked) {
+            context.fillStyle = 'hsla(186, 100%, 50%, 0.60)';
+            context.beginPath();
+            context.arc(this.x, this.y, this.radius + this.selectionBuffer, 0, Math.PI * 2);
+            context.fill();
+        }  
+        this.color = this.colorChosen ?  this.color : 'hsl(' + this.x / 2 + ', 70%, 50%)';
+        context.fillStyle = this.color;
+        context.beginPath();
+        context.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        context.fill();
+    }
+    update() {
+        if (!this.isBeingEdited){
+            this.mouseInteraction();
+            this.idleAnimation();
+        }
     }
 }
 export class Effect {
