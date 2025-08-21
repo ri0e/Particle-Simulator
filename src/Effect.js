@@ -174,6 +174,7 @@ export class Effect {
             this.mouse.x = e.x;
             this.mouse.y = e.y;
         });
+
         window.addEventListener('mousedown', e => {
             if (this.selection) 
                 this.mouse.select = true;
@@ -186,6 +187,7 @@ export class Effect {
                 this.mouse.right = true;
             }
         });
+
         window.addEventListener('mouseup', () => {
             this.mouse.pressed = false;
             this.mouse.select = false;
@@ -281,7 +283,7 @@ export class Effect {
             }
         }
     }
-    updateParticles(newCount) {
+    updateNumberOfParticles(newCount) {
         const difference = newCount - this.numberOfParticles;
         if (difference > 0) {
             this.addParticles(Math.abs(difference));

@@ -57,12 +57,12 @@ const numberOfParticles = document.getElementById('nop');
 numberOfParticles.value = effect.numberOfParticles;
 numberOfParticles.addEventListener('input' , () => {
     let proceed;
-    if (numberOfParticles.value > 100 && !appeared){
+    if (numberOfParticles.value > 1000 && !appeared){
         proceed = confirm('You seem to have chosen a very large number for your particles.\n Do you wish to proceed?');
         if (proceed) appeared = true;
         else return;
     }
-    effect.updateParticles(numberOfParticles.value);
+    effect.updateNumberOfParticles(numberOfParticles.value);
 });
 const simulationSpeed = document.getElementById('speed');
 simulationSpeed.value = effect.speed;
