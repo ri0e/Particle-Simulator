@@ -20,9 +20,6 @@ class Particle {
 
         this.vx = Math.random() * 4 - 2;
         this.vy = Math.random() * 4 - 2;
-
-        this.pushX = 0;
-        this.pushY = 0;
     }
     handleSelection() {
         if (this.effect.selection) {
@@ -36,47 +33,57 @@ class Particle {
             this.hovered = false;
         }
     }
-    idleAnimation() {
-        this.x += (this.pushX *= this.effect.friction) + (this.vx * Math.abs(this.effect.speed));
-        this.y += (this.pushY *= this.effect.friction) + (this.vy * Math.abs(this.effect.speed));
-
+    boundaryCheck() {
         if (this.x < this.radius) {
             this.x = this.radius;
-            if (this.vx < 0) this.vx *= -1;
-            if (this.pushX < 0) this.pushX *= -1;
+            if (this.vx < 0) this.vx *= -0.3;
         } else if (this.x > this.effect.width - this.radius) {
             this.x = this.effect.width - this.radius;
-            if (this.vx > 0) this.vx *= -1;
-            if (this.pushX > 0) this.pushX *= -1;
+            if (this.vx > 0) this.vx *= -0.3;
         }
         if (this.y < this.radius) {
             this.y = this.radius;
-            if (this.vy < 0) this.vy *= -1;
-            if (this.pushY < 0) this.pushY *= -1;
+            if (this.vy < 0) this.vy *= -0.3;
         } else if (this.y > this.effect.height - this.radius) {
             this.y = this.effect.height - this.radius;
-            if (this.vy > 0) this.vy *= -1;
-            if (this.pushY > 0) this.pushY *= -1;
+            if (this.vy > 0) this.vy *= -0.3;
+        }
+    }
+    gravity() {
+        if (this.effect.gravity > 0) {
+            this.vy += this.effect.gravity;
         }
     }
     mouseInteraction(){
         if (this.effect.mouse.pressed) {
-                const dx = this.x - this.effect.mouse.x;
-                const dy = this.y - this.effect.mouse.y;
-                const distance = Math.hypot(dx, dy);
+            const dx = this.x - this.effect.mouse.x;
+            const dy = this.y - this.effect.mouse.y;
+            const distance = Math.hypot(dx, dy);
 
-                if ((distance < this.effect.mouse.radius) && this.effect.mouse.left) {
-                    const pushForce = this.effect.mouse.radius / distance;
-                    const angle = Math.atan2(dy, dx);
-                    this.pushX += Math.cos(angle) * pushForce;
-                    this.pushY += Math.sin(angle) * pushForce;
-                }
-                if ((distance < this.effect.mouse.radius) && this.effect.mouse.right) {
-                    const pullForce = distance / this.effect.mouse.radius;
-                    this.pushX += (this.effect.mouse.x - this.x) * pullForce;
-                    this.pushY += (this.effect.mouse.y - this.y) * pullForce;
-                }
+            if ((distance < this.effect.mouse.radius) && this.effect.mouse.left) {
+                const pushForce = (1 - (distance / this.effect.mouse.radius));
+                const angle = Math.atan2(dy, dx);
+                this.vx += Math.cos(angle) * pushForce;
+                this.vy += Math.sin(angle) * pushForce;
             }
+            if (this.effect.mouse.right) {
+                const pullStrength = 0.5;
+                const pullX = (this.effect.mouse.x - this.x) * pullStrength;
+                const pullY = (this.effect.mouse.y - this.y) * pullStrength;
+
+                const dampeningFactor = 0.95;
+                this.vx *= dampeningFactor;
+                this.vy *= dampeningFactor;
+                
+                this.vx += pullX;
+                this.vy += pullY;
+            }
+            // if ((distance < this.effect.mouse.radius) && this.effect.mouse.right) {
+            //     const pullForce = distance / this.effect.mouse.radius;
+            //     this.vx += (this.effect.mouse.x - this.x) * pullForce;
+            //     this.vy += (this.effect.mouse.y - this.y) * pullForce;
+            // }
+        }
     }
     updateRadius(radius){
         this.radius = radius;
@@ -111,7 +118,7 @@ class Particle {
             context.arc(this.x, this.y, this.radius + this.selectionBuffer, 0, Math.PI * 2);
             context.fill();
         }  
-        this.color = this.colorChosen ?  this.color : 'hsl(' + this.x / 2 + ', 70%, 50%)';
+        this.color = this.colorChosen ?  this.color : 'hsl(' + this.y / 2 + ', 70%, 50%)';
         context.fillStyle = this.color;
         context.beginPath();
         context.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
@@ -120,10 +127,15 @@ class Particle {
     update() {
         if (!this.isBeingEdited){
             this.mouseInteraction();
-            this.idleAnimation();
+            this.boundaryCheck();
+            this.gravity();
+
+            this.x += (this.vx * Math.abs(this.effect.speed));
+            this.y += (this.vy * Math.abs(this.effect.speed));
         }
     }
 }
+
 export class Effect {
     constructor(canvas) {
         this.canvas = canvas;
@@ -145,10 +157,10 @@ export class Effect {
         this.connect = true;
 
         this.maxdistance = 150;
-
         this.speed = 1;
         this.radius = this.particles[0].maxRadius;
-        this.friction = 0.90;
+        this.gravity = 0.1;
+        this.friction = 0.99;
 
         this.mouse = {
             x: 0,
@@ -174,7 +186,6 @@ export class Effect {
             this.mouse.x = e.x;
             this.mouse.y = e.y;
         });
-
         window.addEventListener('mousedown', e => {
             if (this.selection) 
                 this.mouse.select = true;
@@ -187,7 +198,6 @@ export class Effect {
                 this.mouse.right = true;
             }
         });
-
         window.addEventListener('mouseup', () => {
             this.mouse.pressed = false;
             this.mouse.select = false;
@@ -308,15 +318,16 @@ export class Effect {
         });
     }
     handleParticles() {
-        if (this.collide || this.connect) this.collision();
         this.particles.forEach(particle => {
             particle.draw(this.context);
             particle.update();
         });
+
+        if (this.collide || this.connect) this.collision();
     }
     collision() {
         for (let a = 0; a < this.particles.length; a++) {
-            for (let b = a; b < this.particles.length; b++) {
+            for (let b = a + 1; b < this.particles.length; b++) {
                 const p1 = this.particles[a];
                 const p2 = this.particles[b];
                 
@@ -327,32 +338,37 @@ export class Effect {
 
                 if (this.collide) {
                     if (distance < contact) {
-                        const nx = dx / distance;
-                        const ny = dy / distance;
-                        const rvx = p1.vx + p1.pushX - p2.vx - p2.pushX;
-                        const rvy = p1.vy + p1.pushY - p2.vy - p2.pushY;
-                        const vn = rvx * nx + rvy * ny;
-
-                        if (vn < 0) {
-                            const impulse = (2 * vn) / (p1.mass + p2.mass);
-
-                            p1.vx -= impulse * p2.mass * nx;
-                            p1.vy -= impulse * p2.mass * ny;
-                            p2.vx += impulse * p1.mass * nx;
-                            p2.vy += impulse * p1.mass * ny;
-
-                            const overlap = contact - distance;
-                            if (overlap > 0) {
-                                const totalMass = p1.mass + p2.mass;
-                                p1.x -= (overlap * nx) * (p2.mass / totalMass);
-                                p1.y -= (overlap * ny) * (p2.mass / totalMass);
-                                p2.x += (overlap * nx) * (p1.mass / totalMass);
-                                p2.y += (overlap * ny) * (p1.mass / totalMass);
-                            }
+                        const overlap = contact - distance;
+                        if (overlap > 0) {
+                            const totalMass = p1.mass + p2.mass;
+                            const separationX = (overlap * dx / distance);
+                            const separationY = (overlap * dy / distance);
+                            p1.x += separationX * (p2.mass / totalMass);
+                            p1.y += separationY * (p2.mass / totalMass);
+                            p2.x -= separationX * (p1.mass / totalMass);
+                            p2.y -= separationY * (p1.mass / totalMass);
                         }
+
+                        const angle = Math.atan2(dy, dx);
+                        const v1 = {
+                            x: p1.vx * Math.cos(angle) + p1.vy * Math.sin(angle),
+                            y: p1.vy * Math.cos(angle) - p1.vx * Math.sin(angle)
+                        };
+                        const v2 = {
+                            x: p2.vx * Math.cos(angle) + p2.vy * Math.sin(angle),
+                            y: p2.vy * Math.cos(angle) - p2.vx * Math.sin(angle)
+                        };
+
+                        const v1FinalX = ((p1.mass - p2.mass) * v1.x + 2 * p2.mass * v2.x) / (p1.mass + p2.mass);
+                        const v2FinalX = ((p2.mass - p1.mass) * v2.x + 2 * p1.mass * v1.x) / (p1.mass + p2.mass);
+
+                        p1.vx = v1FinalX * Math.cos(angle) - v1.y * Math.sin(angle);
+                        p1.vy = v1FinalX * Math.sin(angle) + v1.y * Math.cos(angle);
+                        p2.vx = v2FinalX * Math.cos(angle) - v2.y * Math.sin(angle);
+                        p2.vy = v2FinalX * Math.sin(angle) + v2.y * Math.cos(angle);
                     }
                 }
-
+                
                 if (this.connect) {
                     if (distance < this.maxdistance) {
                         this.context.save();

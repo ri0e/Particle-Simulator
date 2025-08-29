@@ -135,5 +135,6 @@ function particleProperties() {
     context.fill();
     requestAnimationFrame(particleProperties);
 }
+
 particleProperties();
 //#endregions
