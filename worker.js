@@ -25,43 +25,92 @@ function mouseInteraction(particle, mouse) {
     }
 }
 
-function boundaryCheck(particle) {
+function boundaryCheck(particle, width, height) {
     if (particle.x < particle.radius) {
         particle.x = particle.radius;
         if (particle.vx < 0) particle.vx *= -0.3;
-    } else if (particle.x > particle.effect.width - particle.radius) {
-        particle.x = particle.effect.width - particle.radius;
+    } else if (particle.x > width - particle.radius) {
+        particle.x = width - particle.radius;
         if (particle.vx > 0) particle.vx *= -0.3;
     }
     if (particle.y < particle.radius) {
         particle.y = particle.radius;
         if (particle.vy < 0) particle.vy *= -0.3;
-    } else if (particle.y > particle.effect.height - particle.radius) {
-        particle.y = particle.effect.height - particle.radius;
+    } else if (particle.y > height - particle.radius) {
+        particle.y = height - particle.radius;
         if (particle.vy > 0) particle.vy *= -0.3;
     }
 }
 
-function gravity(particle, gravity) {
+function applyGravity(particle, gravity) {
     if (gravity > 0) {
         particle.vy += gravity;
     }
 }
 
+function collision(particles){
+    for (let a = 0; a < particles.length; a++) {
+        for (let b = a + 1; b < particles.length; b++) {
+            const p1 = particles[a];
+            const p2 = particles[b];
+            
+            const contact = p1.radius + p2.radius;
+            const dx = p1.x - p2.x;
+            const dy = p1.y - p2.y;
+            const distance = Math.hypot(dx, dy);
+
+            if (distance < contact) {
+                const overlap = contact - distance;
+                if (overlap > 0) {
+                    const totalMass = p1.mass + p2.mass;
+                    const separationX = (overlap * dx / distance);
+                    const separationY = (overlap * dy / distance);
+                    p1.x += separationX * (p2.mass / totalMass);
+                    p1.y += separationY * (p2.mass / totalMass);
+                    p2.x -= separationX * (p1.mass / totalMass);
+                    p2.y -= separationY * (p1.mass / totalMass);
+                }
+
+                const angle = Math.atan2(dy, dx);
+                const v1 = {
+                    x: p1.vx * Math.cos(angle) + p1.vy * Math.sin(angle),
+                    y: p1.vy * Math.cos(angle) - p1.vx * Math.sin(angle)
+                };
+                const v2 = {
+                    x: p2.vx * Math.cos(angle) + p2.vy * Math.sin(angle),
+                    y: p2.vy * Math.cos(angle) - p2.vx * Math.sin(angle)
+                };
+
+                const v1FinalX = ((p1.mass - p2.mass) * v1.x + 2 * p2.mass * v2.x) / (p1.mass + p2.mass);
+                const v2FinalX = ((p2.mass - p1.mass) * v2.x + 2 * p1.mass * v1.x) / (p1.mass + p2.mass);
+
+                p1.vx = v1FinalX * Math.cos(angle) - v1.y * Math.sin(angle);
+                p1.vy = v1FinalX * Math.sin(angle) + v1.y * Math.cos(angle);
+                p2.vx = v2FinalX * Math.cos(angle) - v2.y * Math.sin(angle);
+                p2.vy = v2FinalX * Math.sin(angle) + v2.y * Math.cos(angle);
+            }
+        }
+    }
+}
+
 self.onmessage = e => {
-    // particle array from effect.
+    const { particles, mouse, speed, gravity, width, height } = e.data;
+
     particles.forEach(p => {
         if (!p.isBeingEdited) {
+            boundaryCheck(p, width, height)
             mouseInteraction(p, mouse);
-            gravity(p);
+            applyGravity(p, gravity);
+            
+            p.x += (p.vx * Math.abs(speed));
+            p.y += (p.vy * Math.abs(speed));
         }
     });
 
-    for (let i = 0; i < collisionIterations; i++) {
-        resolveCollisions(particles);
-    }
+    collision(particles);
+
+    self.postMessage(particles);
 };
-// 
 // if (this.connect) {
 //     if (distance < this.maxdistance) {
 //         this.context.save();
@@ -73,4 +122,5 @@ self.onmessage = e => {
 //         this.context.stroke();
 //         this.context.restore();
 //     }
+// 
 // }
