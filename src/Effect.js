@@ -33,58 +33,6 @@ class Particle {
             this.hovered = false;
         }
     }
-    boundaryCheck() {
-        if (this.x < this.radius) {
-            this.x = this.radius;
-            if (this.vx < 0) this.vx *= -0.3;
-        } else if (this.x > this.effect.width - this.radius) {
-            this.x = this.effect.width - this.radius;
-            if (this.vx > 0) this.vx *= -0.3;
-        }
-        if (this.y < this.radius) {
-            this.y = this.radius;
-            if (this.vy < 0) this.vy *= -0.3;
-        } else if (this.y > this.effect.height - this.radius) {
-            this.y = this.effect.height - this.radius;
-            if (this.vy > 0) this.vy *= -0.3;
-        }
-    }
-    gravity() {
-        if (this.effect.gravity > 0) {
-            this.vy += this.effect.gravity;
-        }
-    }
-    mouseInteraction(){
-        if (this.effect.mouse.pressed) {
-            const dx = this.x - this.effect.mouse.x;
-            const dy = this.y - this.effect.mouse.y;
-            const distance = Math.hypot(dx, dy);
-
-            if ((distance < this.effect.mouse.radius) && this.effect.mouse.left) {
-                const pushForce = (1 - (distance / this.effect.mouse.radius));
-                const angle = Math.atan2(dy, dx);
-                this.vx += Math.cos(angle) * pushForce;
-                this.vy += Math.sin(angle) * pushForce;
-            }
-            if (this.effect.mouse.right) {
-                const pullStrength = 0.5;
-                const pullX = (this.effect.mouse.x - this.x) * pullStrength;
-                const pullY = (this.effect.mouse.y - this.y) * pullStrength;
-
-                const dampeningFactor = 0.95;
-                this.vx *= dampeningFactor;
-                this.vy *= dampeningFactor;
-                
-                this.vx += pullX;
-                this.vy += pullY;
-            }
-            // if ((distance < this.effect.mouse.radius) && this.effect.mouse.right) {
-            //     const pullForce = distance / this.effect.mouse.radius;
-            //     this.vx += (this.effect.mouse.x - this.x) * pullForce;
-            //     this.vy += (this.effect.mouse.y - this.y) * pullForce;
-            // }
-        }
-    }
     updateRadius(radius){
         this.radius = radius;
 
@@ -124,16 +72,70 @@ class Particle {
         context.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
         context.fill();
     }
-    update() {
-        if (!this.isBeingEdited){
-            this.mouseInteraction();
-            this.boundaryCheck();
-            this.gravity();
+//     boundaryCheck() {
+//         if (this.x < this.radius) {
+//             this.x = this.radius;
+//             if (this.vx < 0) this.vx *= -0.3;
+//         } else if (this.x > this.effect.width - this.radius) {
+//             this.x = this.effect.width - this.radius;
+//             if (this.vx > 0) this.vx *= -0.3;
+//         }
+//         if (this.y < this.radius) {
+//             this.y = this.radius;
+//             if (this.vy < 0) this.vy *= -0.3;
+//         } else if (this.y > this.effect.height - this.radius) {
+//             this.y = this.effect.height - this.radius;
+//             if (this.vy > 0) this.vy *= -0.3;
+//         }
+//     }
+//     gravity() {
+//         if (this.effect.gravity > 0) {
+//             this.vy += this.effect.gravity;
+//         }
+//     }
+//     mouseInteraction(){
+//         if (this.effect.mouse.pressed) {
+//             const dx = this.x - this.effect.mouse.x;
+//             const dy = this.y - this.effect.mouse.y;
+//             const distance = Math.hypot(dx, dy);
 
-            this.x += (this.vx * Math.abs(this.effect.speed));
-            this.y += (this.vy * Math.abs(this.effect.speed));
-        }
-    }
+//             if (distance < this.effect.mouse.radius) {
+//                 if (this.effect.mouse.left) {
+//                     const pushForce = (1 - (distance / this.effect.mouse.radius));
+//                     const angle = Math.atan2(dy, dx);
+//                     this.vx += Math.cos(angle) * pushForce;
+//                     this.vy += Math.sin(angle) * pushForce;
+//                 }
+//                 if (this.effect.mouse.right) {
+//                     const pullForce = -0.05;
+//                     const dampening = 0.75;
+
+//                     this.vx += dx * pullForce;
+//                     this.vy += dy * pullForce;
+
+//                     this.vx *= dampening;
+//                     this.vy *= dampening;
+//                 }
+//                 // 
+//                 // if ((distance < this.effect.mouse.radius) && this.effect.mouse.right) {
+//                 //     const pullForce = distance / this.effect.mouse.radius;
+//                 //     this.vx += (this.effect.mouse.x - this.x) * pullForce;
+//                 //     this.vy += (this.effect.mouse.y - this.y) * pullForce;
+//                 // }
+//                 // 
+//             }
+//         }
+//     }
+//     update() {
+//         if (!this.isBeingEdited){
+//             this.mouseInteraction();
+//             this.boundaryCheck();
+//             this.gravity();
+
+//             this.x += (this.vx * Math.abs(this.effect.speed));
+//             this.y += (this.vy * Math.abs(this.effect.speed));
+//         }
+//     }
 }
 
 export class Effect {
@@ -322,7 +324,6 @@ export class Effect {
             particle.draw(this.context);
             particle.update();
         });
-
         if (this.collide || this.connect) this.collision();
     }
     collision() {
