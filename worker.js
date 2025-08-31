@@ -94,20 +94,23 @@ function collision(particles){
 }
 
 self.onmessage = e => {
-    const { particles, mouse, speed, gravity, width, height } = e.data;
+    const { particles, mouse, speed, gravity, width, height, collide, boundaryCheckOp, gravityOp} = e.data;
+
+    console.log(gravityOp);
 
     particles.forEach(p => {
         if (!p.isBeingEdited) {
-            boundaryCheck(p, width, height)
+            if (boundaryCheckOp) boundaryCheck(p, width, height)
+            if (gravityOp && collide) applyGravity(p, gravity);
             mouseInteraction(p, mouse);
-            applyGravity(p, gravity);
             
             p.x += (p.vx * Math.abs(speed));
             p.y += (p.vy * Math.abs(speed));
         }
     });
 
-    collision(particles);
+    if (collide)
+        collision(particles);
 
     self.postMessage(particles);
 };

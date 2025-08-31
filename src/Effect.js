@@ -92,6 +92,8 @@ export class Effect {
         this.constRadius = false;
         this.collide = true;
         this.connect = true;
+        this.gravityOp = false;
+        this.boundaryCheckOp = true;
 
         this.maxdistance = 150;
         this.speed = 1;
@@ -274,7 +276,10 @@ export class Effect {
             speed: this.speed,
             gravity: this.gravity,
             width: this.width,
-            height: this.height
+            height: this.height,
+            collide: this.collide,
+            boundaryCheckOp: this.boundaryCheckOp,
+            gravityOp: this.gravityOp
         });
     }
     drawParticles() {

@@ -32,6 +32,12 @@
                     <input id="collision" type="checkbox">
                     <div class="tooltiptext">Do you want the particles to have collision? <div class="mini">May cause performance issues</div></div>
                 </div>
+                <!--Gravity-->
+                <div class="control tooltip">
+                    <label for="gravity">Gravity:</label>
+                    <input id="gravity" type="checkbox">
+                    <div class="tooltiptext">Do you want the particles to be affected by gravity?<div class="mini">May cause performance issues</div></div>
+                </div>
                 <!--Draw Lines-->
                 <div class="control tooltip">
                     <label for="connect">Draw Lines:</label>
@@ -44,7 +50,13 @@
                     <input class="number" id="connectDistance" type="number" min="1" step="1">
                     <div class="tooltiptext">Maximum distance between particles to draw lines.<div class="mini">Positive values.</div></div>
                 </div>
-                 <!--Selection-->
+                <!--Boundary Check-->
+                <div class="control tooltip">
+                    <label for="boundaryCheck">Boundary Check:</label>
+                    <input id="boundaryCheck" type="checkbox" checked>
+                    <div class="tooltiptext">Do you want the particles to stay within your screen?<div class="mini">Uncheck to let them fly away.</div></div>
+                </div>
+                <!--Selection-->
                 <div class="control tooltip">
                     <label for="selection">Selection:</label>
                     <input id="selection" type="checkbox">

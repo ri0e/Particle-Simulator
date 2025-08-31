@@ -75,10 +75,22 @@ simulationSpeed.addEventListener('input' , () => {
     }
     effect.speed = simulationSpeed.value;
 });
+const gravityCheck = document.getElementById('gravity');
+effect.gravityOp = gravityCheck.checked;
+gravityCheck.addEventListener('input', () => {
+    effect.gravityOp = gravityCheck.checked;
+});
+const boundaryCheck = document.getElementById('boundaryCheck');
+effect.boundaryCheckOp = boundaryCheck.checked;
+boundaryCheck.addEventListener('input', () => {
+    effect.boundaryCheckOp = boundaryCheck.checked;
+});
 const collisionCheck = document.getElementById('collision');
 effect.collide = collisionCheck.checked;
+gravityCheck.parentElement.hidden = !effect.collide;
 collisionCheck.addEventListener('input', () => {
     effect.collide = collisionCheck.checked;
+    gravityCheck.parentElement.hidden = !effect.collide;
 });
 const connectCheck = document.getElementById('connect');
 effect.connect = connectCheck.checked;
