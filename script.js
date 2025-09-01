@@ -87,20 +87,20 @@ boundaryCheck.addEventListener('input', () => {
 });
 const collisionCheck = document.getElementById('collision');
 effect.collide = collisionCheck.checked;
-gravityCheck.parentElement.hidden = !effect.collide;
+gravityCheck.parentElement.style.display = !effect.collide ? 'none' : 'block';
 collisionCheck.addEventListener('input', () => {
     effect.collide = collisionCheck.checked;
-    gravityCheck.parentElement.hidden = !effect.collide;
+    gravityCheck.parentElement.style.display = !effect.collide ? 'none' : 'block';
 });
 const connectCheck = document.getElementById('connect');
 effect.connect = connectCheck.checked;
 connectCheck.addEventListener('input', () => {
     effect.connect = connectCheck.checked;
-    connectDistance.parentElement.hidden = !effect.connect;
+    connectDistance.parentElement.style.display = !effect.connect ? 'none' : 'block';
 });
 const connectDistance = document.getElementById('connectDistance');
 connectDistance.value = effect.maxdistance;
-connectDistance.parentElement.hidden = connectCheck.value;
+connectDistance.parentElement.style.display = connectCheck.value ? 'none' : 'block';
 connectDistance.addEventListener('input', () => {
     effect.maxdistance = connectDistance.value;
 });
@@ -109,12 +109,12 @@ mouseInteractionCheck.checked = effect.mouse.active;
 let mouseWasChecked = mouseInteractionCheck.checked;
 mouseInteractionCheck.addEventListener('input', () => {
     effect.mouse.active = mouseInteractionCheck.checked;
-    mouseRadius.parentElement.hidden = !effect.mouse.active;
+    mouseRadius.parentElement.style.display = !effect.mouse.active ? 'none' : 'block';
     mouseWasChecked = mouseInteractionCheck.checked;
 });
 const mouseRadius = document.getElementById('mouseRadius');
 mouseRadius.value = effect.mouse.radius;
-mouseRadius.parentElement.hidden = !mouseInteractionCheck.checked;
+mouseRadius.parentElement.style.display = !mouseInteractionCheck.checked ? 'none' : 'block';
 mouseRadius.addEventListener('input', () => {
     effect.mouse.radius = mouseRadius.value;
 });
@@ -144,7 +144,7 @@ radius.addEventListener('input', () => {
     if (value > 0){
         effect.constRadius = !randomRadiusCheck.checked;
         effect.radius = value;
-        effect.updateRadius(randomRadiusCheck.checked);
+        effect.updateRadii(randomRadiusCheck.checked);
     }
 });
 //#endregion

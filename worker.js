@@ -26,7 +26,7 @@ function mouseInteraction(particle, mouse) {
 }
 
 function boundaryCheck(particle, width, height) {
-    const speedAfterCollision = -1;
+    const speedAfterCollision = -0.5;
     if (particle.x < particle.radius) {
         particle.x = particle.radius;
         if (particle.vx < 0) particle.vx *= speedAfterCollision;
@@ -97,14 +97,12 @@ function collision(particles){
 self.onmessage = e => {
     const { particles, mouse, speed, gravity, width, height, collide, boundaryCheckOp, gravityOp} = e.data;
 
-    console.log(gravityOp);
-
     particles.forEach(p => {
         if (!p.isBeingEdited) {
             if (boundaryCheckOp) boundaryCheck(p, width, height)
             if (gravityOp && collide) applyGravity(p, gravity);
             mouseInteraction(p, mouse);
-            
+
             p.x += (p.vx * Math.abs(speed));
             p.y += (p.vy * Math.abs(speed));
         }

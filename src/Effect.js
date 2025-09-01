@@ -35,7 +35,6 @@ class Particle {
     updateRadius(radius){
         this.radius = radius;
 
-        console.log(this.width);
         this.x = Math.max(this.radius, Math.min(this.x, this.effect.width - this.radius));
         this.y = Math.max(this.radius, Math.min(this.y, this.effect.height - this.radius));
     }
@@ -104,11 +103,15 @@ export class Effect {
         this.worker = new Worker('worker.js');
         this.worker.onmessage = e => {
             const updatedParticles = e.data;
-            for (let i = 0; i < updatedParticles.length; i++) {
-                this.particles[i].x = updatedParticles[i].x;
-                this.particles[i].y = updatedParticles[i].y;
-                this.particles[i].vx = updatedParticles[i].vx;
-                this.particles[i].vy = updatedParticles[i].vy;
+            for (let i = 0; i < this.particles.length; i++) {
+                try {
+                    this.particles[i].x = updatedParticles[i].x;
+                    this.particles[i].y = updatedParticles[i].y;
+                    this.particles[i].vx = updatedParticles[i].vx;
+                    this.particles[i].vy = updatedParticles[i].vy;
+                } finally {
+                    //pass
+                }
             }
         };
 
@@ -252,7 +255,7 @@ export class Effect {
         }
         this.numberOfParticles = this.particles.length;
     }
-    updateRadius(bool) {
+    updateRadii(bool) {
         this.particles.forEach(particle => {
             if (!bool) {
                 particle.maxRadius = this.radius;
@@ -262,7 +265,7 @@ export class Effect {
                 particle.radius = Math.floor(Math.random() * (this.radius) + particle.minRadius);
             }
 
-            particle.mass = Math.PI * particle.radius ** 2;
+            particle.mass = Math.floor(Math.PI * particle.radius ** 2);
             particle.x = Math.max(particle.radius, Math.min(particle.x, this.width - particle.radius));
             particle.y = Math.max(particle.radius, Math.min(particle.y, this.height - particle.radius));
         });

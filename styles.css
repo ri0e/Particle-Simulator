@@ -3,6 +3,11 @@
     padding: 0;
     box-sizing: border-box;
     touch-action: none;
+    font-family: "Sono", monospace;
+    font-optical-sizing: auto;
+    font-weight: 300;
+    font-style: normal;
+    font-variation-settings: "MONO" 0.4;
 }
 
 body {
@@ -42,9 +47,15 @@ body {
 }
 
 .control {
+    display: flex;
     width: fit-content;
     padding: 0px 0.9em;
     margin-top: 0.95em;
+}
+
+.control label {
+    margin: auto;
+    margin-right: 0.3em;
 }
 
 .collapse-btn {
@@ -56,7 +67,7 @@ body {
     padding: 0;
     top: 50%;
     transform: translateY(-50%);
-    z-index: 3;
+    z-index: 2;
 }
 
 #col {left: 100%;}
@@ -77,6 +88,7 @@ body {
 }
 
 #hide h3 {
+    font-weight: 600;
     margin-top: 0.90em;
 }
 
@@ -108,6 +120,8 @@ body {
 
 div h1 {
     text-align: center;
+    font-weight: 500;
+    font-size: 1.7em;
     margin-bottom: 0.74em;
 }
 
@@ -131,7 +145,7 @@ input.number{
     border-radius: 0.3em;
     padding: 0.2em 0.5em;
     position: absolute;
-    z-index: 5;
+    z-index: 3;
     top: -5px;
     left: 110%;
 }
