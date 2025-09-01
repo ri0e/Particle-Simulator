@@ -26,19 +26,20 @@ function mouseInteraction(particle, mouse) {
 }
 
 function boundaryCheck(particle, width, height) {
+    const speedAfterCollision = -1;
     if (particle.x < particle.radius) {
         particle.x = particle.radius;
-        if (particle.vx < 0) particle.vx *= -0.3;
+        if (particle.vx < 0) particle.vx *= speedAfterCollision;
     } else if (particle.x > width - particle.radius) {
         particle.x = width - particle.radius;
-        if (particle.vx > 0) particle.vx *= -0.3;
+        if (particle.vx > 0) particle.vx *= speedAfterCollision;
     }
     if (particle.y < particle.radius) {
         particle.y = particle.radius;
-        if (particle.vy < 0) particle.vy *= -0.3;
+        if (particle.vy < 0) particle.vy *= speedAfterCollision;   
     } else if (particle.y > height - particle.radius) {
         particle.y = height - particle.radius;
-        if (particle.vy > 0) particle.vy *= -0.3;
+        if (particle.vy > 0) particle.vy *= speedAfterCollision;
     }
 }
 
@@ -125,5 +126,4 @@ self.onmessage = e => {
 //         this.context.stroke();
 //         this.context.restore();
 //     }
-// 
 // }
