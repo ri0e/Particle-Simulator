@@ -34,17 +34,17 @@ const arrows = ['<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" 
                 ];
 for (let i = 0; i < controlPanels.length; i++) {
     collapseButtons[i].innerHTML = arrows[i % 4];
-    controlPanels[i].hidden = false;
+    controlPanels[i].style.display = 'flex';
     collapseButtons[i].addEventListener('click', () => {
-        if (!controlPanels[i].hidden){
+        if (controlPanels[i].style.display !== 'none'){
             collapseButtons[i].innerHTML = arrows[(i % 4) ^ 1];
-            controlPanels[i].hidden = true;
+            controlPanels[i].style.display = 'none';
             collapseButtons[i].style.opacity = 0.3;
             effect.mouse.active = mouseWasChecked;
         }
         else {
             collapseButtons[i].innerHTML = arrows[i % 4];
-            controlPanels[i].hidden = false;
+            controlPanels[i].style.display = 'flex';
             collapseButtons[i].style.opacity = 1;
             effect.mouse.active = mouseWasChecked;
         }
@@ -87,20 +87,20 @@ boundaryCheck.addEventListener('input', () => {
 });
 const collisionCheck = document.getElementById('collision');
 effect.collide = collisionCheck.checked;
-gravityCheck.parentElement.style.display = !effect.collide ? 'none' : 'block';
+gravityCheck.parentElement.style.display = !effect.collide ? 'none' : 'flex';
 collisionCheck.addEventListener('input', () => {
     effect.collide = collisionCheck.checked;
-    gravityCheck.parentElement.style.display = !effect.collide ? 'none' : 'block';
+    gravityCheck.parentElement.style.display = !effect.collide ? 'none' : 'flex';
 });
 const connectCheck = document.getElementById('connect');
 effect.connect = connectCheck.checked;
 connectCheck.addEventListener('input', () => {
     effect.connect = connectCheck.checked;
-    connectDistance.parentElement.style.display = !effect.connect ? 'none' : 'block';
+    connectDistance.parentElement.style.display = !effect.connect ? 'none' : 'flex';
 });
 const connectDistance = document.getElementById('connectDistance');
 connectDistance.value = effect.maxdistance;
-connectDistance.parentElement.style.display = connectCheck.value ? 'none' : 'block';
+connectDistance.parentElement.style.display = connectCheck.value ? 'none' : 'flex';
 connectDistance.addEventListener('input', () => {
     effect.maxdistance = connectDistance.value;
 });
@@ -109,12 +109,12 @@ mouseInteractionCheck.checked = effect.mouse.active;
 let mouseWasChecked = mouseInteractionCheck.checked;
 mouseInteractionCheck.addEventListener('input', () => {
     effect.mouse.active = mouseInteractionCheck.checked;
-    mouseRadius.parentElement.style.display = !effect.mouse.active ? 'none' : 'block';
+    mouseRadius.parentElement.style.display = !effect.mouse.active ? 'none' : 'flex';
     mouseWasChecked = mouseInteractionCheck.checked;
 });
 const mouseRadius = document.getElementById('mouseRadius');
 mouseRadius.value = effect.mouse.radius;
-mouseRadius.parentElement.style.display = !mouseInteractionCheck.checked ? 'none' : 'block';
+mouseRadius.parentElement.style.display = !mouseInteractionCheck.checked ? 'none' : 'flex';
 mouseRadius.addEventListener('input', () => {
     effect.mouse.radius = mouseRadius.value;
 });

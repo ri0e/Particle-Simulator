@@ -23,8 +23,10 @@ body {
     cursor: none;
 }
 
+/* Control panel containers */
 .control-container {
     height: 100%;
+    overflow: hidden;
     position: absolute;
     top: 0;
     z-index: 1;
@@ -33,31 +35,40 @@ body {
 #c1 {left: 0;}
 #c2 {right: 0;}
 
+/* Control panels */
 .control-panel {
-    overflow: scroll;
-    height: 100%;
-    width: fit-content;
-    padding: 0px 0.6em;
-    border: 0.3em solid cyan;
-    background-color: rgba(0, 0, 0, 0.6);
+    height: 100em;
+    width: 16em;
+    padding: 0;
+    border: 0.15em solid rgba(0, 255, 255, 0.7);
+    background-color: rgba(10, 10, 10, 0.6);
     backdrop-filter: blur(15px);
     margin: 0;
     color: white;
+    display: flex;
+    flex-direction: column;
+    position: relative;
     z-index: 1;
 }
 
-.control {
-    display: flex;
-    width: fit-content;
-    padding: 0px 0.9em;
-    margin-top: 0.95em;
+#c1 .control-panel {border-right: none;}
+#c2 .control-panel {border-left: none;}
+
+.control-panel h3,
+#Properties h1 {
+    margin: 0.5em 0.4em;
+    font-weight: 600;
+    color: #00ffff;
+    text-shadow: 0 1px 2px #00ffff;
+    text-transform: uppercase;
 }
 
-.control label {
-    margin: auto;
-    margin-right: 0.3em;
+#Properties h1 {
+    margin-top: 0.5em;
+    margin-bottom: 1em;
 }
 
+/* Collapse buttons */
 .collapse-btn {
     background: none;
     border: none;
@@ -73,13 +84,89 @@ body {
 #col {left: 100%;}
 #col2 {right: 100%}
 
+/* Control elements */
+.control {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0 1em;
+    padding: 0.6em 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.control:last-of-type {
+    border-bottom: none;
+}
+
+.control label {
+    font-size: 0.85em;
+    color: #c6c6c6;
+}
+
+.control input[type="number"],
+.control input[type="text"],
+.control input[type="color"] {
+    width: 6em;
+    background: transparent;
+    border: 1px solid rgba(0, 255, 255, 0.3);
+    color: #eeeeee;
+    padding: 0.2em;
+    border-radius: 0.2em;
+    outline: none;
+    transition: all 0.2s ease-in-out;
+}
+
+.control input[type="color"] {
+    height: 32px;
+}
+
+.control input[type="number"]:hover,
+.control input[type="color"]:hover {
+    outline: groove 1px #00ffff;
+}
+
+.control input[type="number"]:focus,
+.control input[type="color"]:focus {
+    outline: groove 1px #00ffff;
+}
+
+.control input:disabled {
+    appearance: textfield;
+    background-color: transparent;
+    color: #999;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    cursor: not-allowed;
+    text-shadow: none;
+}
+
+.control input[type="number"]:disabled::-webkit-inner-spin-button,
+.control input[type="number"]:disabled::-webkit-outer-spin-button {
+    opacity: 0.1;
+}
+
+.control input[type="checkbox"] {
+    cursor: pointer;
+    appearance: none;
+    width: 1.2em;
+    height: 1.2em;
+    border: 1px solid rgba(0, 255, 255, 0.5);
+    border-radius: 0.2em;
+    position: relative;
+    transition: all 0.2s ease-in-out;
+}
+
+.control input[type="checkbox"]:checked {
+    background-color: #00ffff;
+    border-color: #00ffff;
+}
+
 #canvas2 {
     background: rgba(0, 0, 0, 0.5);
     border: solid rgb(0, 242, 255) 0.2em;
-    margin: 0px 0.5em;
+    margin-left: 10%;
     border-radius: 10%;
-    width: fit-content;
-    height: fit-content;
+    width: 200px;
+    height: 200px;
     margin-top: 1em;
 }
 
@@ -92,30 +179,25 @@ body {
     margin-top: 0.90em;
 }
 
-.control input:disabled {
-    padding: 0;
-    margin: 0;
-    margin-left: 0.2em;
-    background-color: transparent; 
-    color: #fff;
-    border-style: transparent;
-    cursor: not-allowed;
+/* Button */
+#edit {
+    width: 60%;
+    margin-top: 1.5em;
+    background: #00ffff;
+    color: #000000;
+    border: #00ffff groove 1px;
+    padding: 0.7em;
+    margin-left: 20%;
+    border-radius: 0.4em;
+    font-size: 0.9em;
+    font-weight: 600;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
 }
 
-#edit {
-    background-color: #2ea44f;
-    border: 0.1em solid rgba(27, 31, 35, .15);
-    border-radius: 0.4em;
-    box-shadow: rgba(27, 31, 35, .1) 0 0.1em 0;
-    box-sizing: border-box;
-    color: #fff;
-    cursor: pointer;
-    display: inline-block;
-    margin-top: 0.5em;
-    font-size: 0.85em;
-    font-weight: 600;
-    line-height: 1.4em;
-    padding: 0.4em 0.80em;
+#edit:hover {
+    outline: #00e6e6 groove 1px;
 }
 
 div h1 {
@@ -146,6 +228,9 @@ input.number{
     padding: 0.2em 0.5em;
     position: absolute;
     z-index: 3;
+}
+
+.tooltip .tooltiptext.right {
     top: -5px;
     left: 110%;
 }

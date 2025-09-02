@@ -123,7 +123,7 @@ export class Effect {
             left: false,
             right: false,
             active: true,
-            radius: 150,
+            radius: 200,
             cursorRadius: 10,
             draw(context) {
                 if (this.active){

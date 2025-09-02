@@ -79,7 +79,8 @@ editViewButton.addEventListener('click', () => {
         particleVY.disabled = false;
         basedOnColor.disabled = false;
         particleColor.disabled = false;
-        editViewButton.style.backgroundColor = '#2977f4';
+        editViewButton.style.backgroundColor = 'transparent';
+        editViewButton.style.color = '#00ffff';
         editViewButton.textContent = 'View';
     } else {
         particleX.disabled = true;
@@ -90,7 +91,8 @@ editViewButton.addEventListener('click', () => {
         particleVY.disabled = true;
         basedOnColor.disabled = true;
         particleColor.disabled = true;
-        editViewButton.style.backgroundColor = '#2ea44f';
+        editViewButton.style.backgroundColor = '#00ffff';
+        editViewButton.style.color = '#000000';
         editViewButton.textContent = 'Edit';
     }
 });
