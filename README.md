@@ -24,8 +24,7 @@ Everything after this is not that impressive
 3. Use the control panel to:
    - Change parameters.
 
-or you could go to (this)[https://glassybridge.github.io/Particle-Simulator/] website
-You can alternatively head to https://glassybridge.github.io/Particle-Simulator to try it out.
+You can alternatively head to (this website)[https://glassybridge.github.io/Particle-Simulator] to try it out.
 
 ## Requirements
 
