@@ -1,3 +1,4 @@
+/* Global styles */
 * {
     margin: 0;
     padding: 0;
@@ -14,6 +15,7 @@ body {
     background-color: black;
 }
 
+/* Canvas 1 */
 #canvas1 {
     background: black;
     position: absolute;
@@ -26,7 +28,6 @@ body {
 /* Control panel containers */
 .control-container {
     height: 100%;
-    overflow: hidden;
     position: absolute;
     top: 0;
     z-index: 1;
@@ -37,22 +38,32 @@ body {
 
 /* Control panels */
 .control-panel {
-    height: 100em;
+    position: relative;
+    display: flex;
+    flex-direction: column;
     width: 16em;
+    height: 100%;
     padding: 0;
+    margin: 0;
+    color: white;
     border: 0.15em solid rgba(0, 255, 255, 0.7);
     background-color: rgba(10, 10, 10, 0.6);
     backdrop-filter: blur(15px);
-    margin: 0;
-    color: white;
-    display: flex;
-    flex-direction: column;
-    position: relative;
     z-index: 1;
 }
 
-#c1 .control-panel {border-right: none;}
-#c2 .control-panel {border-left: none;}
+#hide { /* hide is #c1 .control-panel */
+    border-right: none;
+}
+
+#hide h3 {
+    font-weight: 600;
+    margin-top: 0.90em;
+}
+
+#hide2 { /* hide2 is #c2 .control-panel*/
+    border-left: none;
+}
 
 .control-panel h3,
 #Properties h1 {
@@ -64,21 +75,22 @@ body {
 }
 
 #Properties h1 {
+    text-align: center;
+    font-size: 1.7em;
     margin-top: 0.5em;
-    margin-bottom: 1em;
+    margin-bottom: 0.74em;
 }
 
 /* Collapse buttons */
 .collapse-btn {
+    position: absolute;
+    top: 50%;
+    padding: 0;
+    margin: 0;
     background: none;
     border: none;
-    position: absolute;
-    white-space: pre;
-    margin: 0;
-    padding: 0;
-    top: 50%;
     transform: translateY(-50%);
-    z-index: 2;
+    z-index: -1;
 }
 
 #col {left: 100%;}
@@ -107,10 +119,10 @@ body {
 .control input[type="text"],
 .control input[type="color"] {
     width: 6em;
+    padding: 0.2em;
+    color: #eeeeee;
     background: transparent;
     border: 1px solid rgba(0, 255, 255, 0.3);
-    color: #eeeeee;
-    padding: 0.2em;
     border-radius: 0.2em;
     outline: none;
     transition: all 0.2s ease-in-out;
@@ -133,7 +145,7 @@ body {
 .control input:disabled {
     appearance: textfield;
     background-color: transparent;
-    color: #999;
+    color: #cecece;
     border: 1px solid rgba(255, 255, 255, 0.05);
     cursor: not-allowed;
     text-shadow: none;
@@ -160,79 +172,94 @@ body {
     border-color: #00ffff;
 }
 
+/* Canvas 2 */
 #canvas2 {
-    background: rgba(0, 0, 0, 0.5);
-    border: solid rgb(0, 242, 255) 0.2em;
-    margin-left: 10%;
-    border-radius: 10%;
     width: 200px;
     height: 200px;
+    margin-left: 10%;
     margin-top: 1em;
-}
-
-#hide {
-    overflow: visible;
-}
-
-#hide h3 {
-    font-weight: 600;
-    margin-top: 0.90em;
+    background: rgba(0, 0, 0, 0.5);
+    border: solid rgb(0, 242, 255) 0.2em;
+    border-radius: 10%;
 }
 
 /* Button */
 #edit {
+    font-size: 0.9em;
+    text-transform: uppercase;
+    font-weight: 600;
     width: 60%;
+    padding: 0.7em;
     margin-top: 1.5em;
+    margin-left: 20%;
     background: #00ffff;
     color: #000000;
-    border: #00ffff groove 1px;
-    padding: 0.7em;
-    margin-left: 20%;
-    border-radius: 0.4em;
-    font-size: 0.9em;
-    font-weight: 600;
-    text-transform: uppercase;
     cursor: pointer;
+    border: #00ffff groove 1px;
+    border-radius: 0.4em;
     transition: all 0.2s ease-in-out;
 }
 
 #edit:hover {
-    outline: #00e6e6 groove 1px;
+    outline: #00ffff groove 1px;
 }
 
-div h1 {
-    text-align: center;
-    font-weight: 500;
-    font-size: 1.7em;
-    margin-bottom: 0.74em;
-}
-
-input.number{
-    width: 5em;
-}
-
+/* Tooltip */
 .tooltip {
     position: relative;
 }
 
 .tooltip .tooltiptext {
-    font-size: 0.75em;
     display: none;
-    visibility: hidden;
-    width: 15em;
-    background-color: #000000;
-    color: #ffffff;
-    border: 0.1em solid cyan;
-    text-align: center;
-    border-radius: 0.3em;
-    padding: 0.2em 0.5em;
     position: absolute;
+    text-align: center;
+    font-size: 0.75em;
+    width: 15em;
+    padding: 0.2em 0.5em;
+    border-radius: 0.3em;
+    color: #ffffff;
+    background-color: #000000;
+    border: 0.1em solid cyan;
     z-index: 3;
 }
 
+.tooltip .tooltiptext::after {
+  content: " ";
+  position: absolute;
+  top: 50%;
+  right: 100%; /* To the left of the tooltip */
+  margin-top: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent black transparent transparent;
+}
+
 .tooltip .tooltiptext.right {
-    top: -5px;
+    top: 50%;
+    transform: translateY(-50%);
     left: 110%;
+}
+
+.tooltip .tooltiptext.right::after {
+    content: " ";
+    position: absolute;
+    top: 50%;
+    right: 100%;
+    margin-top: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent #00ffff transparent transparent;
+}
+
+.tooltip .tooltiptext.left::after {
+    content: " ";
+    position: absolute;
+    top: 50%;
+    left: 100%;
+    margin-top: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent transparent transparent black;
 }
 
 .tooltip .tooltiptext .mini {
@@ -242,6 +269,5 @@ input.number{
 }
 
 .tooltip:hover .tooltiptext {
-    visibility: visible;
-    display: block
+    display: block;
 }
