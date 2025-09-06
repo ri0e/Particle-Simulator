@@ -13,6 +13,7 @@
 
 body {
     background-color: black;
+    overflow: hidden;
 }
 
 /* Canvas 1 */
@@ -219,19 +220,8 @@ body {
     border-radius: 0.3em;
     color: #ffffff;
     background-color: #000000;
-    border: 0.1em solid cyan;
+    border: 0.1em solid #00ffff;
     z-index: 3;
-}
-
-.tooltip .tooltiptext::after {
-  content: " ";
-  position: absolute;
-  top: 50%;
-  right: 100%; /* To the left of the tooltip */
-  margin-top: -5px;
-  border-width: 5px;
-  border-style: solid;
-  border-color: transparent black transparent transparent;
 }
 
 .tooltip .tooltiptext.right {
@@ -251,6 +241,12 @@ body {
     border-color: transparent #00ffff transparent transparent;
 }
 
+.tooltip .tooltiptext.left {
+    top: 50%;
+    transform: translateY(-50%);
+    right: 110%;
+}
+
 .tooltip .tooltiptext.left::after {
     content: " ";
     position: absolute;
@@ -259,7 +255,7 @@ body {
     margin-top: -5px;
     border-width: 5px;
     border-style: solid;
-    border-color: transparent transparent transparent black;
+    border-color: transparent transparent transparent #00ffff;
 }
 
 .tooltip .tooltiptext .mini {

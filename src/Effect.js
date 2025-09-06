@@ -298,10 +298,36 @@ export class Effect {
             this.canvas.style.cursor = 'auto';
         }
     }
+    connectParticles() {
+        for (let a = 0; a < this.particles.length; a++) {
+            for (let b = a + 1; b < this.particles.length; b++) {
+                const p1 = this.particles[a];
+                const p2 = this.particles[b];
+
+                const dx = this.particles[a].x - this.particles[b].x;
+                const dy = this.particles[a].y - this.particles[b].y;
+                const distance = Math.hypot(dx, dy);
+
+                if (distance < this.maxdistance) {
+                    this.context.save();
+                    const opacity = 1 - (distance / this.maxdistance);
+                    this.context.globalAlpha = opacity;
+                    this.context.beginPath();
+                    this.context.moveTo(p1.x, p1.y);
+                    this.context.lineTo(p2.x, p2.y);
+                    this.context.stroke();
+                    this.context.restore();
+                }
+            }
+        }
+    }
     animate = () => {
-        if (this.selection) this.handleSelection();
+        if (this.selection)
+            this.handleSelection();
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.handleParticles();
+        if (this.connect) 
+            this.connectParticles();
         this.drawParticles();
         this.drawMouse();
 
