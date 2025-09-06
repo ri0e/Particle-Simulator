@@ -1,17 +1,21 @@
 # Particle Simulation
 
-A customizable 2D particle simulation built with vanillava JavaScript and HTML Canvas.  
-Particles interact with each other and respond to user input, supporting features like collision detection and response and mouse interaction.
+A customizable 2D particle simulation built with vanilla JavaScript and HTML Canvas.  
+Particles interact with each other and respond to user input, supporting features like collision, mouse interaction, multithreaded calculation.
 
 ## Features
 
-- **Collision detection and response**
-- **Mouse interaction**
-- **Connected particles**
-- **Adjustable parameters**
-- **Responsive design**
-- **Tool tips**
-- More in the works.
+- **Collision**: particles collide with eachother
+- **Mouse interaction**: allows you to push and pull on particles.
+- **Connected particles**: draws a faint line between particles.
+- **Adjustable parameters**: all parameters are able to be changed from the control panels.
+- **Tool tips**: tells you what each parameter does.
+
+Everything after this is not that impressive
+
+- **Boundary check**: in collaboration (¯\_(ツ)_/¯) with the responsive windows, the boundaries of the particles adjust.
+- **Gravity**: particles go down.
+- **Select**: You can select particles and edit their properties.
 
 ## Usage
 
