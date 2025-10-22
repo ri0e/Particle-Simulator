@@ -4,6 +4,8 @@
         <meta charset = "UTF-8">
         <meta name = "viewport" content="width = device-width, initial-scale = 1.0">
         <link rel="stylesheet" href="styles.css">
+        <script defer type="module" src="script.js"></script>
+        <script defer type="module" src="properties.js"></script>
         <link rel="shortcut icon" href="ps.gif" type="image/gif">
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -16,6 +18,17 @@
         <div class="control-container" id="c1">
             <div class="collapse-btn" id="col"></div>
             <div class="control-panel" id="hide">
+                <h3>Simulation Mode:</h3>
+                <div class="control tooltip">
+                    <label for="soild-particles">
+                        Soild Particles
+                        <input type="radio" name="sim-mode" id="soild-particles" value="solid" checked>
+                    </label>
+                    <label for="fluid">
+                        Fluid
+                        <input type="radio" name="sim-mode" id="fluid" value="fluid">
+                    </label>
+                </div>
                 <h3>Simulation Settings</h3>
                 <!--Particle Number-->
                 <div class="control tooltip">
@@ -147,8 +160,5 @@
                 </div>
             </div>
         </div>
-
-        <script type="module" src="script.js"></script>
-        <script type="module" src="properties.js"></script>
     </body>
 </html>

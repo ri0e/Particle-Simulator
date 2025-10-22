@@ -157,7 +157,8 @@ body {
     opacity: 0.1;
 }
 
-.control input[type="checkbox"] {
+.control input[type="checkbox"],
+input[type="radio"] {
     cursor: pointer;
     appearance: none;
     width: 1.2em;
@@ -168,7 +169,8 @@ body {
     transition: all 0.2s ease-in-out;
 }
 
-.control input[type="checkbox"]:checked {
+.control input[type="checkbox"]:checked,
+input[type="radio"]:checked {
     background-color: #00ffff;
     border-color: #00ffff;
 }
@@ -266,4 +268,9 @@ body {
 
 .tooltip:hover .tooltiptext {
     display: block;
+}
+
+label[for="soild-particles"] input,
+label[for="fluid"] input {
+    vertical-align: top;
 }
