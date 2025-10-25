@@ -19,3 +19,23 @@ export function hslToHex(hsl) {
 
     return '#ffffff';
 }
+
+const simMode = document.querySelectorAll('input[name="sim-mode"]');
+simMode.forEach(mode =>{
+  mode.addEventListener('change', switchControlPanel);
+})
+
+export function switchControlPanel(){
+    const simMode = document.querySelector('input[name="sim-mode"]:checked').value;
+
+    const fluidSettings = document.querySelector('.fluid-mode-settings');
+    const solidSettings = document.querySelector('.solid-mode-settings');
+
+    if (simMode === 'fluid') {
+      fluidSettings.style.display = 'block';
+      solidSettings.style.display = 'none';
+    } else {
+      fluidSettings.style.display = 'none';
+      solidSettings.style.display = 'block';
+    }
+}

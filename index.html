@@ -18,6 +18,7 @@
         <div class="control-container" id="c1">
             <div class="collapse-btn" id="col"></div>
             <div class="control-panel" id="hide">
+                <!-- Simulation Mode -->
                 <h3>Simulation Mode:</h3>
                 <div class="control tooltip">
                     <label for="soild-particles">
@@ -29,80 +30,108 @@
                         <input type="radio" name="sim-mode" id="fluid" value="fluid">
                     </label>
                 </div>
-                <h3>Simulation Settings</h3>
-                <!--Particle Number-->
-                <div class="control tooltip">
-                    <label for="nop">Particle Number:</label>
-                    <input class="number" id="nop" type="number" min="1" step="1">
-                    <div class="tooltiptext right"> The number of particles on screen. <div class="mini">Higher numbers cause performance issues.</div></div>
-                </div>
-                <!--Simulation Speed-->
-                <div class="control tooltip">
-                    <label for="speed">Simulation Speed:</label>
-                    <input class="number" id="speed" type="number" min="0">
-                    <div class="tooltiptext right"> How fast do you want the simulation to go? <div class="mini">You can use decimal values to make it slower.</div></div>
-                </div>
-                <!--Collision-->
-                <div class="control tooltip">
-                    <label for="collision">Collision:</label>
-                    <input id="collision" type="checkbox">
-                    <div class="tooltiptext right">Do you want the particles to have collision? <div class="mini">May cause performance issues</div></div>
-                </div>
-                <!--Gravity-->
-                <div class="control tooltip">
-                    <label for="gravity">Gravity:</label>
-                    <input id="gravity" type="checkbox">
-                    <div class="tooltiptext right">Do you want the particles to be affected by gravity?<div class="mini">May cause performance issues</div></div>
-                </div>
-                <!--Draw Lines-->
-                <div class="control tooltip">
-                    <label for="connect">Draw Lines:</label>
-                    <input id="connect" type="checkbox">
-                    <div class="tooltiptext right">Do you want to draw lines connecting particles. within a certain distance?<div class="mini">May cause performance issues.</div></div>
-                </div>
-                <!--Line Length-->
-                <div class="control tooltip">
-                    <label for="connectDistance">Line length:</label>
-                    <input class="number" id="connectDistance" type="number" min="1" step="1">
-                    <div class="tooltiptext right">Maximum distance between particles to draw lines.<div class="mini">Positive values.</div></div>
-                </div>
-                <!--Boundary Check-->
-                <div class="control tooltip">
-                    <label for="boundaryCheck">Boundary Check:</label>
-                    <input id="boundaryCheck" type="checkbox" checked>
-                    <div class="tooltiptext right">Do you want the particles to stay within your screen?<div class="mini">Uncheck to let them fly away.</div></div>
-                </div>
-                <!--Selection-->
-                <div class="control tooltip">
-                    <label for="selection">Select:</label>
-                    <input id="selection" type="checkbox">
-                    <div class="tooltiptext right">Ability to select each particles.<div class="mini">And edit their properties.</div></div>
-                </div>
-                <h3>Mouse Settings</h3>
-                <!--Mouse Interaction-->
-                <div class="control tooltip">
-                    <label for="mouse">Mouse Interaction:</label>
-                    <input id="mouse" type="checkbox">
-                    <div class="tooltiptext right">Pushing and pulling on particles.<div class="mini">Push (primary) Pull (secondary)</div></div>
-                </div>
-                <!--Mouse Radius-->
-                <div class="control tooltip">
-                    <label for="mouseRadius">Mouse Radius:</label>
-                    <input class="number" id="mouseRadius" type="number" min="1" step="1">
-                    <div class="tooltiptext right">Distance from the cursor where effects apply.<div class="mini">Experiment with it.</div></div>
-                </div>
-                <h3>Particle Settings</h3>
-                <!--Random Particle Radius-->
-                <div class="control tooltip">
-                    <label for="randomRadius">Random Radius:</label>
-                    <input id="randomRadius" type="checkbox">
-                    <div class="tooltiptext right">When checked:<div class="mini">Paricles have random radius upto the radius value.</div></div>
-                </div>
-                <!--Particle Radius-->
-                <div class="control tooltip">
-                    <label for="radius">Radius:</label>
-                    <input class="number" id="radius" type="number" min="1" step="1">
-                    <div class="tooltiptext right">Value for radiust of the particles.<div class="mini">Same if not checked; Random if checked.</div></div>
+                <div class="sim-mode-settings">
+                    <div class="solid-mode-settings">
+                        <h3>Simulation Settings</h3>
+                        <!--Particle Number-->
+                        <div class="control tooltip">
+                            <label for="nop">Particle Number:</label>
+                            <input class="number" id="nop" type="number" min="1" step="1">
+                            <div class="tooltiptext right"> The number of particles on screen. <div class="mini">Higher numbers cause performance issues.</div></div>
+                        </div>
+                        <!--Simulation Speed-->
+                        <div class="control tooltip">
+                            <label for="speed">Simulation Speed:</label>
+                            <input class="number" id="speed" type="number" min="0">
+                            <div class="tooltiptext right"> How fast do you want the simulation to go? <div class="mini">You can use decimal values to make it slower.</div></div>
+                        </div>
+                        <!--Collision-->
+                        <div class="control tooltip">
+                            <label for="collision">Collision:</label>
+                            <input id="collision" type="checkbox">
+                            <div class="tooltiptext right">Do you want the particles to have collision? <div class="mini">May cause performance issues</div></div>
+                        </div>
+                        <!--Gravity-->
+                        <div class="control tooltip">
+                            <label for="gravity">Gravity:</label>
+                            <input id="gravity" type="checkbox">
+                            <div class="tooltiptext right">Do you want the particles to be affected by gravity?<div class="mini">May cause performance issues</div></div>
+                        </div>
+                        <!--Draw Lines-->
+                        <div class="control tooltip">
+                            <label for="connect">Draw Lines:</label>
+                            <input id="connect" type="checkbox">
+                            <div class="tooltiptext right">Do you want to draw lines connecting particles. within a certain distance?<div class="mini">May cause performance issues.</div></div>
+                        </div>
+                        <!--Line Length-->
+                        <div class="control tooltip">
+                            <label for="connectDistance">Line length:</label>
+                            <input class="number" id="connectDistance" type="number" min="1" step="1">
+                            <div class="tooltiptext right">Maximum distance between particles to draw lines.<div class="mini">Positive values.</div></div>
+                        </div>
+                        <!--Boundary Check-->
+                        <div class="control tooltip">
+                            <label for="boundaryCheck">Boundary Check:</label>
+                            <input id="boundaryCheck" type="checkbox" checked>
+                            <div class="tooltiptext right">Do you want the particles to stay within your screen?<div class="mini">Uncheck to let them fly away.</div></div>
+                        </div>
+                        <!--Selection-->
+                        <div class="control tooltip">
+                            <label for="selection">Select:</label>
+                            <input id="selection" type="checkbox">
+                            <div class="tooltiptext right">Ability to select each particles.<div class="mini">And edit their properties.</div></div>
+                        </div>
+                        <h3>Mouse Settings</h3>
+                        <!--Mouse Interaction-->
+                        <div class="control tooltip">
+                            <label for="mouse">Mouse Interaction:</label>
+                            <input id="mouse" type="checkbox">
+                            <div class="tooltiptext right">Pushing and pulling on particles.<div class="mini">Push (primary) Pull (secondary)</div></div>
+                        </div>
+                        <!--Mouse Radius-->
+                        <div class="control tooltip">
+                            <label for="mouseRadius">Mouse Radius:</label>
+                            <input class="number" id="mouseRadius" type="number" min="1" step="1">
+                            <div class="tooltiptext right">Distance from the cursor where effects apply.<div class="mini">Experiment with it.</div></div>
+                        </div>
+                        <h3>Particle Settings</h3>
+                        <!--Random Particle Radius-->
+                        <div class="control tooltip">
+                            <label for="randomRadius">Random Radius:</label>
+                            <input id="randomRadius" type="checkbox">
+                            <div class="tooltiptext right">When checked:<div class="mini">Paricles have random radius upto the radius value.</div></div>
+                        </div>
+                        <!--Particle Radius-->
+                        <div class="control tooltip">
+                            <label for="radius">Radius:</label>
+                            <input class="number" id="radius" type="number" min="1" step="1">
+                            <div class="tooltiptext right">Value for radiust of the particles.<div class="mini">Same if not checked; Random if checked.</div></div>
+                        </div>
+                    </div>
+                    <div class="fluid-mode-settings" hidden>
+                        <h3>Fluid Settings</h3>
+                        <div class="control tooltip">
+                            <label for="speed">Density</label>
+                            <input class="number" id="speed" type="number" min="0">
+                        </div>
+                        <div class="control tooltip">
+                            <label for="speed">Viscosity</label>
+                            <input class="number" id="speed" type="number" min="0">
+                        </div>
+                        <div class="control tooltip">
+                            <label for="speed">Surface tension</label>
+                            <input class="number" id="speed" type="number" min="0">
+                        </div>
+                        <div class="control tooltip">
+                            <label for="gravity">Gravity:</label>
+                            <input id="gravity" type="checkbox">
+                        </div>
+                        <h3>Mouse Settings</h3>
+                        <div class="control tooltip">
+                            <label for="mouse">Mouse Interaction:</label>
+                            <input id="mouse" type="checkbox">
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
